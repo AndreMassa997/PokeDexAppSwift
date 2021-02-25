@@ -13,7 +13,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .red
-        self.mainViewModel?.showDetail()
+        mainViewModel?.getPokemons(offset: 20)
     }
     
     //MARK: PUBLIC METHODS

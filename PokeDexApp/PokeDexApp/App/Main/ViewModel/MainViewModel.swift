@@ -14,7 +14,13 @@ final class MainViewModel{
         self.coordinator = coordinator
     }
     
+    
+    public func getPokemons(offset: Int){
+        self.coordinator?.getPokemons(offset: offset)
+    }
+
     public func showDetail(){
         coordinator?.showDetail()
     }
+    
 }

@@ -10,6 +10,8 @@
 		3E55391125E7EB970093214A /* DetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55391025E7EB970093214A /* DetailsCoordinator.swift */; };
 		3E55391525E7EC1C0093214A /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55391425E7EC1C0093214A /* DetailsViewController.swift */; };
 		3E55391925E7EE580093214A /* DetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55391825E7EE580093214A /* DetailsViewModel.swift */; };
+		3E55391D25E7FF870093214A /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55391C25E7FF870093214A /* MainModel.swift */; };
+		3E55392925E80F4B0093214A /* PokeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55392825E80F4B0093214A /* PokeAPI.swift */; };
 		3E7CC0AD25E7E15900823793 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7CC0AC25E7E15900823793 /* AppCoordinator.swift */; };
 		3E7CC0B125E7E35800823793 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7CC0B025E7E35800823793 /* MainCoordinator.swift */; };
 		3E7CC0B425E7E3C100823793 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7CC0B325E7E3C100823793 /* MainViewController.swift */; };
@@ -23,6 +25,9 @@
 		3E55391025E7EB970093214A /* DetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailsCoordinator.swift; path = ../../../../../../../../DetailsCoordinator.swift; sourceTree = "<group>"; };
 		3E55391425E7EC1C0093214A /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailsViewController.swift; path = ../../../../../../../../../DetailsViewController.swift; sourceTree = "<group>"; };
 		3E55391825E7EE580093214A /* DetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailsViewModel.swift; path = ../../../../../../../../../DetailsViewModel.swift; sourceTree = "<group>"; };
+		3E55391C25E7FF870093214A /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainModel.swift; path = ../../../../../../../../../MainModel.swift; sourceTree = "<group>"; };
+		3E55392425E801880093214A /* PokemonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonModel.swift; sourceTree = "<group>"; };
+		3E55392825E80F4B0093214A /* PokeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PokeAPI.swift; path = ../../../../../../../../../PokeAPI.swift; sourceTree = "<group>"; };
 		3E7CC0AC25E7E15900823793 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		3E7CC0B025E7E35800823793 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		3E7CC0B325E7E3C100823793 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -71,12 +76,46 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		3E55391B25E7FF610093214A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3E55391C25E7FF870093214A /* MainModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3E55392325E801830093214A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3E55392425E801880093214A /* PokemonModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3E55392525E8018B0093214A /* API */ = {
+			isa = PBXGroup;
+			children = (
+				3E55392825E80F4B0093214A /* PokeAPI.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		3E55392725E806A60093214A /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				3E55392325E801830093214A /* Model */,
+				3E7CC0AC25E7E15900823793 /* AppCoordinator.swift */,
+				3E55392525E8018B0093214A /* API */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		3E7CC0A925E7E12400823793 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				3E55392725E806A60093214A /* Common */,
 				3E7CC0AA25E7E12800823793 /* Main */,
 				3E55390D25E7EB720093214A /* Detail */,
-				3E7CC0AC25E7E15900823793 /* AppCoordinator.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -84,6 +123,7 @@
 		3E7CC0AA25E7E12800823793 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				3E55391B25E7FF610093214A /* Model */,
 				3E7CC0B725E7E6DF00823793 /* ViewModel */,
 				3E7CC0B625E7E51300823793 /* Views */,
 				3E7CC0B025E7E35800823793 /* MainCoordinator.swift */,
@@ -209,6 +249,8 @@
 				3E7CC0B125E7E35800823793 /* MainCoordinator.swift in Sources */,
 				3E55391925E7EE580093214A /* DetailsViewModel.swift in Sources */,
 				3E55391125E7EB970093214A /* DetailsCoordinator.swift in Sources */,
+				3E55392925E80F4B0093214A /* PokeAPI.swift in Sources */,
+				3E55391D25E7FF870093214A /* MainModel.swift in Sources */,
 				3E55391525E7EC1C0093214A /* DetailsViewController.swift in Sources */,
 				3EA3C82825E7A71200CBFEE7 /* AppDelegate.swift in Sources */,
 				3E7CC0B425E7E3C100823793 /* MainViewController.swift in Sources */,
