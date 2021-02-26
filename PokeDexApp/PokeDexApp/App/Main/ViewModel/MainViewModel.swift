@@ -9,14 +9,28 @@ import Foundation
 
 final class MainViewModel{
     var coordinator: MainCoordinator?
+    private(set) var pokemons: [PokemonModel] = []
+    private(set) var nextOffset: Int = 0
+    
+    enum MainCollectionViewCell: Int{
+        case search
+        case pokemon
+        case loader
+        case label
+    }
     
     init(with coordinator: MainCoordinator){
         self.coordinator = coordinator
     }
     
-    
-    public func getPokemons(offset: Int){
-        self.coordinator?.getPokemons(offset: offset)
+    public func getPokemons(offset: Int, onSuccess: (() -> Void)?){
+        self.coordinator?.getPokemons(offset: offset, onSuccess: { [weak self] mainModel, pokemons in
+            self?.pokemons.append(contentsOf: pokemons)
+            if let nextUrl = mainModel.next, let nextOffsetString = nextUrl.getQueryStringParameter(param: "offset"), let nextOffset = Int(nextOffsetString){
+                self?.nextOffset = nextOffset
+            }
+            onSuccess?()
+        })
     }
 
     public func showDetail(){

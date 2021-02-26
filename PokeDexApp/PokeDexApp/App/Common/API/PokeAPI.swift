@@ -10,10 +10,10 @@ import Foundation
 class PokeAPI{
     static let shared: PokeAPI = PokeAPI()
     
-    //100 MB cache memory
-    private let cacheMemory = URLCache(memoryCapacity: 0, diskCapacity: 100*1024*1024, diskPath: "PokeDexAPICache")
+    //200 MB cache memory + 200 MB for images
+    private let cacheMemory = URLCache(memoryCapacity: 0, diskCapacity: 200*1024*1024, diskPath: "PokeDexAPICache")
     
-    func get(path: String, queryParams: [URLQueryItem]?, onSuccess: ((Data) -> Void)?, onErrorHandled: (() -> Void)?){
+    func get(path: String, queryParams: [URLQueryItem]? = nil, onSuccess: ((Data) -> Void)?, onErrorHandled: (() -> Void)?){
         
         //build the URL
         var components = URLComponents()

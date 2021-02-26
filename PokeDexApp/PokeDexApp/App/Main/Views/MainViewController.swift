@@ -9,20 +9,108 @@ import UIKit
 
 class MainViewController: UIViewController {
     private var mainViewModel: MainViewModel?
+    private var offset: Int = 0
+    private weak var footerLoaderView: LoaderCollectionReusableView?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.view.backgroundColor = .red
-        mainViewModel?.getPokemons(offset: 20)
-    }
-    
+    private let collectionView: UICollectionView = {
+        let itemSize: CGFloat = 150
+        let edge: CGFloat = 20
+        let inset = UIScreen.main.bounds.width.truncatingRemainder(dividingBy: itemSize + edge/2) / 2
+        let collectionViewFlowLayout = UICollectionViewFlowLayout()
+        collectionViewFlowLayout.scrollDirection = .vertical
+        collectionViewFlowLayout.minimumInteritemSpacing = edge
+        collectionViewFlowLayout.minimumLineSpacing = edge
+        collectionViewFlowLayout.itemSize = CGSize(width: itemSize, height: itemSize)
+        collectionViewFlowLayout.sectionInset = UIEdgeInsets(top: edge, left: inset, bottom: edge, right: inset)
+        collectionViewFlowLayout.footerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 50)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewFlowLayout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = false
+        return collectionView
+    }()
+        
     //MARK: PUBLIC METHODS
     public func configure(with viewModel: MainViewModel){
+        self.view.backgroundColor = .white
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        self.registerCells()
+
+        
         self.mainViewModel = viewModel
+        self.addViews()
+        self.setupLayout()
+        
+        //get the first list of pokemons
+        mainViewModel?.getPokemons(offset: offset){ [weak self] in
+            self?.collectionView.reloadData()
+        }
     }
     
     //MARK: PRIVATE METHODS
+    private func addViews(){
+        self.view.addSubview(self.collectionView)
+    }
     
+    private func registerCells(){
+        self.collectionView.register(LoaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: LoaderCollectionReusableView.reusableId)
+        self.collectionView.register(PokemonCollectionViewCell.self, forCellWithReuseIdentifier: PokemonCollectionViewCell.reusableId)
+    }
     
+    private func setupLayout(){
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor)
+        ])
+    }
+}
 
+//MARK: UICollectionViewDelegate, UICollectionViewDataSource
+extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        mainViewModel?.pokemons.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCollectionViewCell.reusableId, for: indexPath) as? PokemonCollectionViewCell, let pokemon = mainViewModel?.pokemons[indexPath.item]{
+            cell.configurePokemonCell(pokemonModel: pokemon)
+            return cell
+        }
+        return UICollectionViewCell()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let mainViewModel = mainViewModel else { return }
+        let initalPokemonsNumber = mainViewModel.pokemons.count
+        if initalPokemonsNumber > 0, indexPath.item == initalPokemonsNumber - 1{
+            mainViewModel.getPokemons(offset: mainViewModel.nextOffset, onSuccess: {
+                var indexPaths: [IndexPath] = []
+                let newPokemonsNumber = mainViewModel.pokemons.count - initalPokemonsNumber
+                for i in 0..<newPokemonsNumber{
+                    indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
+                }
+                collectionView.insertItems(at: indexPaths)
+            })
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LoaderCollectionReusableView.reusableId, for: indexPath) as? LoaderCollectionReusableView{
+            footer.configLoader()
+            self.footerLoaderView = footer
+            return footer
+        }
+        return UICollectionReusableView()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+        if elementKind == UICollectionView.elementKindSectionFooter{
+            self.footerLoaderView?.stopAnimate()
+            self.footerLoaderView = nil
+        }
+    }
 }

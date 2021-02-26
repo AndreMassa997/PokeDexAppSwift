@@ -1,6 +1,7 @@
 {
-  "colors" : [
+  "images" : [
     {
+      "filename" : "pokeball.png",
       "idiom" : "universal"
     }
   ],
