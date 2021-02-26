@@ -38,9 +38,9 @@ final class MainCoordinator: Coordinator{
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "offset", value: String(offset))
         ]
-        PokeAPI().get(path: "/pokemon", queryParams: queryItems, onSuccess: { data in
+        PokeAPI.shared.get(path: "pokemon", queryParams: queryItems, onSuccess: { data in
             
-        }, onErrorHandled: { error in
+        }, onErrorHandled: {
         
         })
     }
