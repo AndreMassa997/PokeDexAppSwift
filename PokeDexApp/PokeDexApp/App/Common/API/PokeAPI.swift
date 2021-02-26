@@ -13,7 +13,7 @@ class PokeAPI{
     //200 MB cache memory + 200 MB for images
     private let cacheMemory = URLCache(memoryCapacity: 0, diskCapacity: 200*1024*1024, diskPath: "PokeDexAPICache")
     
-    func get(path: String, queryParams: [URLQueryItem]? = nil, onSuccess: ((Data) -> Void)?, onErrorHandled: (() -> Void)?){
+    func get(path: String, queryParams: [URLQueryItem]? = nil, saveResponseOnCache: Bool = true, onSuccess: ((Data) -> Void)?, onErrorHandled: (() -> Void)?){
         
         //build the URL
         var components = URLComponents()
@@ -67,7 +67,9 @@ class PokeAPI{
                 }
                 
                 //store response and data in cache for offline usage
-                self?.cacheMemory.storeCachedResponse(CachedURLResponse(response: response, data: data), for: request)
+                if saveResponseOnCache{
+                    self?.cacheMemory.storeCachedResponse(CachedURLResponse(response: response, data: data), for: request)
+                }
                 onSuccess?(data)
             }).resume()
         }

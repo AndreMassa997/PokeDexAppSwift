@@ -11,6 +11,7 @@ final class MainCoordinator: Coordinator{
     var childCoordinators: [Coordinator] = []
     var parentCoordinator: Coordinator?
     private let navigationController: UINavigationController
+    private var pokemons: [PokemonModel] = []
     
     init(navigationController: UINavigationController){
         self.navigationController = navigationController
@@ -35,7 +36,7 @@ final class MainCoordinator: Coordinator{
         detailsCooordinator.start()
     }
     
-    func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonModel]) -> Void)?){
+    func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonCellModel]) -> Void)?){
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "offset", value: String(offset))
         ]
@@ -46,16 +47,17 @@ final class MainCoordinator: Coordinator{
                                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                                 let mainModel = try jsonDecoder.decode(MainModel.self, from: data)
                                 let group = DispatchGroup()
-                                var pokemons: [PokemonModel] = []
+                                var pokemons: [PokemonCellModel] = []
                                 mainModel.results?.forEach{ result in
                                     guard let name = result.name else { return }
                                     group.enter()
-                                    PokeAPI.shared.get(path: "pokemon/\(name)", onSuccess: { data in
+                                    PokeAPI.shared.get(path: "pokemon/\(name)", onSuccess: { [weak self] data in
                                         do {
                                             let jsonDecoder = JSONDecoder()
                                             jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                                             let pokemonModel = try jsonDecoder.decode(PokemonModel.self, from: data)
-                                            pokemons.append(pokemonModel)
+                                            self?.pokemons.append(pokemonModel)
+                                            pokemons.append(PokemonCellModel(pokemonModel: pokemonModel))
                                             group.leave()
                                         }
                                         catch let error{
@@ -65,7 +67,8 @@ final class MainCoordinator: Coordinator{
                                         group.leave()
                                     })
                                 }
-                                group.notify(queue: .main) {
+                                group.notify(queue: .main) { [weak self] in
+                                    self?.pokemons.sort(by: { $0.id < $1.id })
                                     pokemons.sort(by: { $0.id < $1.id })
                                     onSuccess?(mainModel, pokemons)
                                 }

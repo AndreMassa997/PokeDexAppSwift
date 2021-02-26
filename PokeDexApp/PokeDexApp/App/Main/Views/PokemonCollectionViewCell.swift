@@ -80,13 +80,13 @@ class PokemonCollectionViewCell: UICollectionViewCell{
     
     //MARK: PUBLIC METHODS
     //Pokemon cell configuration
-    public func configurePokemonCell(pokemonModel: PokemonModel){
+    public func configurePokemonCell(pokemonModel: PokemonCellModel){
         self.setupShadowsAndCorners()
         self.addSubviews()
         self.setupLayout()
         
-        self.image.downloadFromUrl(from: pokemonModel.sprites?.other?.officialArtwork?.frontDefault ?? pokemonModel.sprites?.frontDefault, contentMode: .scaleAspectFit)
+        self.image.downloadFromUrl(from: pokemonModel.imageURL, contentMode: .scaleAspectFit)
         self.nameLabel.text = pokemonModel.name.capitalized
-        self.view.backgroundColor = pokemonModel.types?.first?.type.name.color()
+        self.view.backgroundColor = pokemonModel.type?.color()
     }
 }

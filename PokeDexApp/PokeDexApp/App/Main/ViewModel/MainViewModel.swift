@@ -9,7 +9,7 @@ import Foundation
 
 final class MainViewModel{
     var coordinator: MainCoordinator?
-    private(set) var pokemons: [PokemonModel] = []
+    private(set) var pokemons: [PokemonCellModel] = []
     private(set) var nextOffset: Int = 0
     
     enum MainCollectionViewCell: Int{

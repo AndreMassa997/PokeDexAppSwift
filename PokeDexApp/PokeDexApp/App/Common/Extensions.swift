@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 extension URL{
     func getQueryStringParameter(param: String) -> String? {
       guard let urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false) else { return nil }
