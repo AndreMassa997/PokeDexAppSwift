@@ -147,4 +147,8 @@ enum PokemonType: String, Decodable {
             return #colorLiteral(red: 0.3985958099, green: 0.6181690097, blue: 0.5583426952, alpha: 1)
         }
     }
+    
+    func getImage() -> UIImage?{
+        UIImage(named: rawValue)
+    }
 }

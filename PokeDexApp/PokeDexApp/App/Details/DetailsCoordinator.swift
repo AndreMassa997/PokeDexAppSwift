@@ -11,9 +11,11 @@ final class DetailsCoordinator: Coordinator{
     var childCoordinators: [Coordinator] = []
     var parentCoordinator: Coordinator?
     private let navigationController: UINavigationController
+    private let pokemonModel: PokemonModel
     
-    init(navigationController: UINavigationController){
+    init(navigationController: UINavigationController, pokemonModel: PokemonModel){
         self.navigationController = navigationController
+        self.pokemonModel = pokemonModel
     }
     
     //MARK: PUBLIC METHODS
@@ -21,7 +23,7 @@ final class DetailsCoordinator: Coordinator{
     //Start the detail page
     func start() {
         let detailsViewController = DetailsViewController()
-        let detailsViewModel = DetailsViewModel(with: self)
+        let detailsViewModel = DetailsViewModel(with: self, pokemonModel: pokemonModel)
         detailsViewController.configureDetailView(with: detailsViewModel)
         navigationController.pushViewController(detailsViewController, animated: true)
     }

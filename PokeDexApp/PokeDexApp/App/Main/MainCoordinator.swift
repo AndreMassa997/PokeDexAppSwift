@@ -29,8 +29,12 @@ final class MainCoordinator: Coordinator{
     }
     
     //pokemon from list tapped
-    func showDetail(){
-        let detailsCooordinator = DetailsCoordinator(navigationController: self.navigationController)
+    func showPokemonDetails(pokemon: PokemonCellModel){
+        guard let pokemonModel = self.pokemons.first(where: { $0.id == pokemon.id }) else {
+            //TODO: SHOW ERROR POPUP
+            return
+        }
+        let detailsCooordinator = DetailsCoordinator(navigationController: self.navigationController, pokemonModel: pokemonModel)
         self.addCoordinator(detailsCooordinator)
         detailsCooordinator.parentCoordinator = self
         detailsCooordinator.start()

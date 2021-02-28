@@ -27,17 +27,16 @@ class MainViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.register(LoaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: LoaderCollectionReusableView.reusableId)
+        collectionView.register(PokemonCollectionViewCell.self, forCellWithReuseIdentifier: PokemonCollectionViewCell.reusableId)
         return collectionView
     }()
         
     //MARK: PUBLIC METHODS
     public func configure(with viewModel: MainViewModel){
         self.view.backgroundColor = .white
-        
         collectionView.dataSource = self
         collectionView.delegate = self
-        self.registerCells()
-
         
         self.mainViewModel = viewModel
         self.addViews()
@@ -52,11 +51,6 @@ class MainViewController: UIViewController {
     //MARK: PRIVATE METHODS
     private func addViews(){
         self.view.addSubview(self.collectionView)
-    }
-    
-    private func registerCells(){
-        self.collectionView.register(LoaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: LoaderCollectionReusableView.reusableId)
-        self.collectionView.register(PokemonCollectionViewCell.self, forCellWithReuseIdentifier: PokemonCollectionViewCell.reusableId)
     }
     
     private func setupLayout(){
@@ -112,5 +106,10 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             self.footerLoaderView?.stopAnimate()
             self.footerLoaderView = nil
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let pokemon = self.mainViewModel?.pokemons[indexPath.item] else { return }
+        self.mainViewModel?.didSelectPokemon(pokemon: pokemon)
     }
 }

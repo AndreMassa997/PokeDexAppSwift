@@ -33,8 +33,9 @@ final class MainViewModel{
         })
     }
 
-    public func showDetail(){
-        coordinator?.showDetail()
+    //pokemon from list tapped
+    public func didSelectPokemon(pokemon: PokemonCellModel){
+        coordinator?.showPokemonDetails(pokemon: pokemon)
     }
     
 }

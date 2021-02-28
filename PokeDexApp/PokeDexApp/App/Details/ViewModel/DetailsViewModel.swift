@@ -5,13 +5,18 @@
 //  Created by Andrea Massari on 25/02/21.
 //
 
-import Foundation
+import UIKit
 
 final class DetailsViewModel{
     let coordinator: DetailsCoordinator
     
-    init(with coordinator: DetailsCoordinator){
+    let headerViewModel: DetailsHeaderViewModel
+    let mainColor: UIColor
+    
+    init(with coordinator: DetailsCoordinator, pokemonModel: PokemonModel){
         self.coordinator = coordinator
+        self.headerViewModel = DetailsHeaderViewModel(pokemonModel: pokemonModel)
+        self.mainColor = pokemonModel.types?.first?.type.name.color() ?? .clear
     }
 
     public func viewDidDisappear(){
