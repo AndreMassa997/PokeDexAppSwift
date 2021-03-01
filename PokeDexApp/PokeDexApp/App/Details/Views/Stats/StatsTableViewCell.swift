@@ -66,19 +66,19 @@ class StatsTableViewCell: UITableViewCell {
     
     //MARK: PUBLIC METHODS
     //Pokemon stat configuration
-    public func configureStatCell(statsViewModel: StatsViewModel){
+    public func configureStatCell(statViewModel: StatViewModel){
         self.addSubviews()
         self.setupLayout()
         
-        self.statNameLabel.text = statsViewModel.statName
-        self.statNameLabel.textColor = statsViewModel.mainColor
+        self.statNameLabel.text = statViewModel.statName
+        self.statNameLabel.textColor = statViewModel.mainColor
         
         let formatter = NumberFormatter()
         formatter.minimumIntegerDigits = 3
-        self.valueLabel.text = formatter.string(from: NSNumber(value: statsViewModel.statValue))
+        self.valueLabel.text = formatter.string(from: NSNumber(value: statViewModel.statValue))
         
-        self.progressBar.setProgress(statsViewModel.progressValue, animated: true)
-        self.progressBar.progressTintColor = statsViewModel.mainColor
+        self.progressBar.setProgress(statViewModel.progressValue, animated: true)
+        self.progressBar.progressTintColor = statViewModel.mainColor
     }
 
 }

@@ -22,7 +22,7 @@ struct ResultModel: Decodable {
 }
 
 //Data for single pokemon cell
-struct PokemonCellModel{
+struct PokemonViewModel{
     let name: String
     let type: PokemonType?
     let imageURL: URL?

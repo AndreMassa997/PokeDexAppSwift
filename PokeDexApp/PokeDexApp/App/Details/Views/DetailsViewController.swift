@@ -52,7 +52,7 @@ class DetailsViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             tableView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
             tableView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
         
         //make background gradient
@@ -79,27 +79,30 @@ class DetailsViewController: UIViewController {
 //MARK: -TABLE VIEW DELEGATE, DATA SOURCE
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        self.detailsViewModel?.sectionViewModels.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return self.detailsViewModel?.statsViewModels.count ?? 0
-        default:
-            return 0
+        if let section = self.detailsViewModel?.sectionViewModels[section]{
+            switch section {
+            case .stats(let items), .evolutions(let items):
+                return items.count
+            }
         }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
-            if let cell = tableView.dequeueReusableCell(withIdentifier: StatsTableViewCell.reusableId) as? StatsTableViewCell, let statViewModel = self.detailsViewModel?.statsViewModels[indexPath.row]{
-                cell.configureStatCell(statsViewModel: statViewModel)
-                return cell
+        if let item = self.detailsViewModel?.sectionViewModels[indexPath]{
+            switch item {
+            case .stat(let statViewModel):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: StatsTableViewCell.reusableId) as? StatsTableViewCell{
+                    cell.configureStatCell(statViewModel: statViewModel)
+                    return cell
+                }
+            case .evolution(let evolutionViewModel):
+                return UITableViewCell()
             }
-        default: break
-            
         }
         return UITableViewCell()
     }

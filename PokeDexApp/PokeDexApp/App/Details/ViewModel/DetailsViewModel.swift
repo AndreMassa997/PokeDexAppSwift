@@ -7,11 +7,21 @@
 
 import UIKit
 
+enum DetailsSectionViewModel{
+    case stats(items: [CellViewModel])
+    case evolutions(items: [CellViewModel])
+}
+
+enum CellViewModel{
+    case stat(stat: StatViewModel)
+    case evolution(evolution: String)
+}
+
 final class DetailsViewModel{
     let coordinator: DetailsCoordinator
     
     let headerViewModel: DetailsHeaderViewModel
-    let statsViewModels: [StatsViewModel]
+    private(set) var sectionViewModels: [DetailsSectionViewModel] = []
     let mainColor: UIColor
     let endColor: UIColor
     
@@ -20,9 +30,16 @@ final class DetailsViewModel{
         self.headerViewModel = DetailsHeaderViewModel(pokemonModel: pokemonModel)
         self.mainColor = pokemonModel.types?.first?.type.name.mainColor ?? .clear
         self.endColor = pokemonModel.types?.first?.type.name.endColor ?? .clear
-        self.statsViewModels = pokemonModel.stats?.compactMap{ stat in
-            StatsViewModel(stats: stat, mainColor: pokemonModel.types?.first?.type.name.mainColor ?? .clear, endColor: pokemonModel.types?.first?.type.name.endColor ?? .clear)
-        } ?? []
+        
+        //append stats into stats section
+        self.sectionViewModels.append(.stats(items:
+                                                pokemonModel.stats?.compactMap{ stat in
+                                                    CellViewModel.stat(stat: StatViewModel(stats: stat, mainColor: pokemonModel.types?.first?.type.name.mainColor ?? .clear, endColor: pokemonModel.types?.first?.type.name.endColor ?? .clear))
+                                                } ?? []))
+        
+        //append evolutions into evolution section
+        
+        
     }
 
     public func viewDidDisappear(){
@@ -31,6 +48,16 @@ final class DetailsViewModel{
     
     deinit {
         print("deinitialized DetailsViewModel")
+    }
+}
+
+extension Array where Element == DetailsSectionViewModel {
+    subscript(indexPath: IndexPath) -> CellViewModel {
+        let section = self[indexPath.section]
+        switch section {
+        case .stats(let items), .evolutions(let items):
+            return items[indexPath.row]
+        }
     }
 }
 

@@ -29,7 +29,7 @@ final class MainCoordinator: Coordinator{
     }
     
     //pokemon from list tapped
-    func showPokemonDetails(pokemon: PokemonCellModel){
+    func showPokemonDetails(pokemon: PokemonViewModel){
         guard let pokemonModel = self.pokemons.first(where: { $0.id == pokemon.id }) else {
             //TODO: SHOW ERROR POPUP
             return
@@ -40,7 +40,7 @@ final class MainCoordinator: Coordinator{
         detailsCooordinator.start()
     }
     
-    func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonCellModel]) -> Void)?){
+    func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonViewModel]) -> Void)?){
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "offset", value: String(offset))
         ]
@@ -51,7 +51,7 @@ final class MainCoordinator: Coordinator{
                                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                                 let mainModel = try jsonDecoder.decode(MainModel.self, from: data)
                                 let group = DispatchGroup()
-                                var pokemons: [PokemonCellModel] = []
+                                var pokemons: [PokemonViewModel] = []
                                 mainModel.results?.forEach{ result in
                                     guard let name = result.name else { return }
                                     group.enter()
@@ -61,7 +61,7 @@ final class MainCoordinator: Coordinator{
                                             jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                                             let pokemonModel = try jsonDecoder.decode(PokemonModel.self, from: data)
                                             self?.pokemons.append(pokemonModel)
-                                            pokemons.append(PokemonCellModel(pokemonModel: pokemonModel))
+                                            pokemons.append(PokemonViewModel(pokemonModel: pokemonModel))
                                             group.leave()
                                         }
                                         catch let error{

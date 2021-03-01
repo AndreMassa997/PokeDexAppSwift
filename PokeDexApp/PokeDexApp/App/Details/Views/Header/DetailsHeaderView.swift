@@ -18,7 +18,6 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         let view = UIView()
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 40
         return view
     }()
     
@@ -97,6 +96,9 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
             typesCollectionView.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
         ])
         self.layoutIfNeeded()
+        //round only top-left and top-right corners
+        let bounds = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: self.viewContainer.frame.height)
+        self.viewContainer.roundCorners([.topLeft, .topRight], bounds: bounds, radius: 40)
     }
 }
 

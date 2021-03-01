@@ -1,5 +1,5 @@
 //
-//  StatsViewModel.swift
+//  StatViewModel.swift
 //  PokeDexApp
 //
 //  Created by Andrea Massari on 01/03/21.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class StatsViewModel{
+final class StatViewModel{
     
     let statName: String
     let statValue: Int
