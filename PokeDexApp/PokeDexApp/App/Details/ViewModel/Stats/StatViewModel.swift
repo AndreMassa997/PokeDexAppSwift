@@ -8,7 +8,6 @@
 import UIKit
 
 final class StatViewModel{
-    
     let statName: String
     let statValue: Int
     let progressValue: Float

@@ -7,7 +7,16 @@
 
 import Foundation
 
-enum DetailsSectionModel{
-    case stats(items: [Stats])
-    case evolutions(items: [String])
+struct PokemonSpecies: Decodable{
+    let evolutionChain: SpeciesEvolutionChain
+    let flavorTextEntries: [FlavorTextEntry]
+}
+
+struct SpeciesEvolutionChain: Decodable{
+    let url: URL
+}
+
+struct FlavorTextEntry: Decodable{
+    let flavorText: String
+    let language: ResultModel
 }

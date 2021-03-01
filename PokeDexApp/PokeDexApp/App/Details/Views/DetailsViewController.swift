@@ -12,6 +12,16 @@ class DetailsViewController: UIViewController {
     
     //MARK: -VIEWS DECLARATION
     private let detailsHeaderView: DetailsHeaderView = DetailsHeaderView()
+    
+    private let dismissButton: UIButton = {
+        let button = UIButton(frame: .zero)
+        button.setImage(UIImage(named: "arrow_down"), for: .normal)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(onDismissTap), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.backgroundColor = .clear
@@ -20,6 +30,7 @@ class DetailsViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: StatsTableViewCell.reusableId)
+        tableView.register(LoaderTableViewCell.self, forCellReuseIdentifier: LoaderTableViewCell.reusableId)
         return tableView
     }()
     
@@ -32,9 +43,19 @@ class DetailsViewController: UIViewController {
         self.setupHeaderView()
         self.addSubviews()
         self.setupLayout()
+        
+        //get the pokemon species and evolution chain of the pokemon
+        detailsViewModel.getPokemonSpeciesAndEvolutionChain(onSuccess: { [weak self] in
+            self?.tableView.reloadData()
+        })
     }
     
     //MARK: -PRIVATE METHODS
+    @objc private func onDismissTap(sender: UIButton!){
+        self.dismiss(animated: true, completion: nil)
+        detailsViewModel?.onDismissTapped()
+    }
+    
     private func setupHeaderView(){
         if let headerViewModel = detailsViewModel?.headerViewModel{
             self.detailsHeaderView.configureHeader(detailHeaderViewModel: headerViewModel)
@@ -45,10 +66,18 @@ class DetailsViewController: UIViewController {
     
     private func addSubviews(){
         self.view.addSubview(tableView)
+        self.view.addSubview(dismissButton)
     }
     
     private func setupLayout(){
         NSLayoutConstraint.activate([
+            dismissButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            dismissButton.heightAnchor.constraint(equalToConstant: 30),
+            dismissButton.widthAnchor.constraint(equalToConstant: 30),
+            dismissButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
+            
+            
+            
             tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             tableView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
             tableView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
@@ -66,11 +95,6 @@ class DetailsViewController: UIViewController {
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.detailsViewModel?.viewDidDisappear()
-    }
-    
     deinit {
         print("deinitialized DetailsViewController")
     }
@@ -85,7 +109,13 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let section = self.detailsViewModel?.sectionViewModels[section]{
             switch section {
-            case .stats(let items), .evolutions(let items):
+            case .descriptions(let items), .evolutions(let items):
+                if let items = items{
+                    return items.count
+                }else{
+                    return 1
+                }
+            case .stats(let items):
                 return items.count
             }
         }
@@ -95,6 +125,9 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let item = self.detailsViewModel?.sectionViewModels[indexPath]{
             switch item {
+            case .description(let description):
+                
+                break
             case .stat(let statViewModel):
                 if let cell = tableView.dequeueReusableCell(withIdentifier: StatsTableViewCell.reusableId) as? StatsTableViewCell{
                     cell.configureStatCell(statViewModel: statViewModel)
@@ -103,7 +136,17 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
             case .evolution(let evolutionViewModel):
                 return UITableViewCell()
             }
+        }else{
+            //if no items are in section show loader
+            if let cell = tableView.dequeueReusableCell(withIdentifier: LoaderTableViewCell.reusableId) as? LoaderTableViewCell{
+                cell.configLoader()
+                return cell
+            }
         }
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        UITableView.automaticDimension
     }
 }

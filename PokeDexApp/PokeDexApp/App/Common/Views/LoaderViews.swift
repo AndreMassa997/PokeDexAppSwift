@@ -9,8 +9,8 @@ import UIKit
 import QuartzCore
 
 final class LoaderCollectionReusableView: UICollectionReusableView{
-    
     static let reusableId = "LoaderCollectionReusableView"
+   
     var isSpinning = false
     
     private let imageView: UIImageView = {
@@ -20,6 +20,18 @@ final class LoaderCollectionReusableView: UICollectionReusableView{
         return imageView
     }()
     
+    //MARK: PUBLIC METHODS
+    func configLoader(){
+        self.addSubview(imageView)
+        self.setupLayout()
+        self.startAnimate()
+    }
+    
+    func stopAnimate() {
+        self.imageView.layer.removeAnimation(forKey: "rotationAnimation")
+    }
+    
+    //MARK: PRIVATE METHODS
     private func startSpinWithOptions(_ animationOptions: AnimationOptions){
         UIView.animate(withDuration: 0.5, delay: 0, options: animationOptions, animations: { [weak self] in
             guard let self = self else { return }
@@ -45,19 +57,6 @@ final class LoaderCollectionReusableView: UICollectionReusableView{
         ])
     }
     
-    func configLoader(){
-        self.addSubview(imageView)
-        self.setupLayout()
-        self.startAnimate()
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
     
     private func startAnimate() {
         self.rotate()
@@ -72,53 +71,31 @@ final class LoaderCollectionReusableView: UICollectionReusableView{
         self.imageView.layer.add(rotation, forKey: "rotationAnimation")
     }
     
-    func stopAnimate() {
-        self.imageView.layer.removeAnimation(forKey: "rotationAnimation")
-    }
     
     deinit {
         print("deinit loader")
     }
-    
 }
 
-final class PokeballLoader: UIView{
-    let imageView = UIImageView()
+final class LoaderTableViewCell: UITableViewCell{
+    static let reusableId = "LoaderTableViewCell"
+    private let loader = LoaderCollectionReusableView()
     
-    init(frame: CGRect, image: UIImage) {
-        super.init(frame: frame)
-        
-        imageView.frame = bounds
-        imageView.image = image
-        imageView.contentMode = .scaleAspectFit
-        imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        addSubview(imageView)
+    //MARK: PUBLIC METHODS
+    func configLoader(){
+        self.contentView.addSubview(loader)
+        self.setupLayout()
+        self.loader.configLoader()
     }
     
-    required init(coder: NSCoder) {
-        fatalError()
-    }
-    
-    func startAnimating() {
-        isHidden = false
-        rotate()
-    }
-    
-    func stopAnimating() {
-        isHidden = true
-        removeRotation()
-    }
-    
-    private func rotate() {
-        let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotation.toValue = NSNumber(value: Double.pi * 2)
-        rotation.duration = 1
-        rotation.isCumulative = true
-        rotation.repeatCount = Float.greatestFiniteMagnitude
-        self.imageView.layer.add(rotation, forKey: "rotationAnimation")
-    }
-    
-    private func removeRotation() {
-        self.imageView.layer.removeAnimation(forKey: "rotationAnimation")
+    //MARK: PRIVATE METHODS
+    private func setupLayout(){
+        loader.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            loader.topAnchor.constraint(equalTo: contentView.topAnchor),
+            loader.heightAnchor.constraint(equalToConstant: 40),
+            loader.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+            loader.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+        ])
     }
 }

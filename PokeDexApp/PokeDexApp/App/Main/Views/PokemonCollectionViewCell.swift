@@ -80,7 +80,7 @@ class PokemonCollectionViewCell: UICollectionViewCell{
     
     //MARK: PUBLIC METHODS
     //Pokemon cell configuration
-    public func configurePokemonCell(pokemonModel: PokemonViewModel){
+    public func configurePokemonCell(pokemonModel: PokemonCellViewModel){
         self.setupShadowsAndCorners()
         self.addSubviews()
         self.setupLayout()

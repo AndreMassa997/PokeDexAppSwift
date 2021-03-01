@@ -20,18 +20,3 @@ struct ResultModel: Decodable {
     let name: String?
     let url: URL?
 }
-
-//Data for single pokemon cell
-struct PokemonViewModel{
-    let name: String
-    let type: PokemonType?
-    let imageURL: URL?
-    let id: Int
-    
-    init(pokemonModel: PokemonModel){
-        self.id = pokemonModel.id
-        self.name = pokemonModel.name
-        self.type = pokemonModel.types?.first?.type.name
-        self.imageURL = pokemonModel.sprites?.other?.officialArtwork?.frontDefault ?? pokemonModel.sprites?.other?.dreamWorld?.frontDefault
-    }
-}

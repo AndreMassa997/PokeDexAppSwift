@@ -9,7 +9,7 @@ import Foundation
 
 final class MainViewModel{
     var coordinator: MainCoordinator?
-    private(set) var pokemons: [PokemonViewModel] = []
+    private(set) var pokemons: [PokemonCellViewModel] = []
     private(set) var nextOffset: Int = 0
     
     enum MainCollectionViewCell: Int{
@@ -34,7 +34,7 @@ final class MainViewModel{
     }
 
     //pokemon from list tapped
-    public func didSelectPokemon(pokemon: PokemonViewModel){
+    public func didSelectPokemon(pokemon: PokemonCellViewModel){
         coordinator?.showPokemonDetails(pokemon: pokemon)
     }
     

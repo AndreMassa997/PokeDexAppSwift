@@ -8,7 +8,6 @@
 import UIKit
 
 class StatsTableViewCell: UITableViewCell {
-
     static let reusableId = "StatsTableViewCell"
     
     private let statNameLabel: UILabel = {
@@ -43,7 +42,7 @@ class StatsTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             //stat name constraint
             statNameLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
-            statNameLabel.widthAnchor.constraint(equalToConstant: 30),
+            statNameLabel.widthAnchor.constraint(equalToConstant: 40),
             statNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             statNameLabel.heightAnchor.constraint(equalToConstant: 16),
             
@@ -80,5 +79,4 @@ class StatsTableViewCell: UITableViewCell {
         self.progressBar.setProgress(statViewModel.progressValue, animated: true)
         self.progressBar.progressTintColor = statViewModel.mainColor
     }
-
 }
