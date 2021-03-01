@@ -12,10 +12,19 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
     private var detailsHeaderViewModel: DetailsHeaderViewModel?
     
     private let imageCarouselView = CarouselView()
+    
+    private let viewContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 40
+        return view
+    }()
+    
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 30, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: 30, weight: .light)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -39,41 +48,48 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         self.detailsHeaderViewModel = detailHeaderViewModel
         self.backgroundView = UIView()
         self.backgroundView?.backgroundColor = .clear
+        self.autoresizingMask = .flexibleHeight
+        self.contentView.autoresizingMask = .flexibleHeight
         
         self.imageCarouselView.configureCarousel(carouselViewModel: detailHeaderViewModel.carouselViewModel)
         self.nameLabel.text = detailHeaderViewModel.getPokemonName().capitalized
         typesCollectionView.delegate = self
         typesCollectionView.dataSource = self
-        typesCollectionView.layoutIfNeeded()
         
         self.addSubviews()
         self.setupLayout()
     }
     
     private func addSubviews(){
+        self.viewContainer.addSubview(nameLabel)
+        self.viewContainer.addSubview(typesCollectionView)
+        self.contentView.addSubview(viewContainer)
         self.contentView.addSubview(imageCarouselView)
-        self.contentView.addSubview(nameLabel)
-        self.contentView.addSubview(typesCollectionView)
     }
     
     private func setupLayout(){
         imageCarouselView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             imageCarouselView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageCarouselView.heightAnchor.constraint(equalToConstant: 250),
+            imageCarouselView.heightAnchor.constraint(equalToConstant: 230),
             imageCarouselView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             imageCarouselView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             
-            nameLabel.topAnchor.constraint(equalTo: imageCarouselView.bottomAnchor, constant: 20),
+            viewContainer.topAnchor.constraint(equalTo: imageCarouselView.bottomAnchor, constant: -80),
+            viewContainer.heightAnchor.constraint(equalToConstant: 200),
+            viewContainer.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+            viewContainer.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+            
+            nameLabel.topAnchor.constraint(equalTo: viewContainer.topAnchor, constant: 80),
             nameLabel.heightAnchor.constraint(equalToConstant: 50),
-            nameLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-            nameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+            nameLabel.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
+            nameLabel.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
             
             typesCollectionView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
             typesCollectionView.heightAnchor.constraint(equalToConstant: 40),
-            typesCollectionView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-            typesCollectionView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+            typesCollectionView.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
+            typesCollectionView.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
         ])
     }
 }
@@ -94,8 +110,9 @@ extension DetailsHeaderView: UICollectionViewDelegate, UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView,
                          layout collectionViewLayout: UICollectionViewLayout,
                          insetForSectionAt section: Int) -> UIEdgeInsets{
-        let itemWidthWithEdge: CGFloat = 125
-        let leftRightInsets = UIScreen.main.bounds.width.truncatingRemainder(dividingBy: itemWidthWithEdge * CGFloat(collectionView.numberOfItems(inSection: section))) / 2
+        let totalCellWidth: CGFloat = 120 * CGFloat(collectionView.numberOfItems(inSection: section))
+        let totalSpacingWidth = 10 * CGFloat(collectionView.numberOfItems(inSection: section) - 1)
+        let leftRightInsets = (collectionView.bounds.width - (totalCellWidth + totalSpacingWidth))/2
         return UIEdgeInsets(top: 0, left: leftRightInsets, bottom: 0, right: leftRightInsets)
     }
     

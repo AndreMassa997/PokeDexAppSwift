@@ -29,7 +29,7 @@ final class DetailsHeaderViewModel{
             pokemonModel.sprites?.frontShinyFemale,
         ].compactMap { $0 }
         
-        self.carouselViewModel = CarouselViewModel(carouselModel: CarouselModel(urls: urls, mainColor: pokemonModel.types?.first?.type.name.color() ?? .clear))
+        self.carouselViewModel = CarouselViewModel(carouselModel: CarouselModel(urls: urls, mainColor: pokemonModel.types?.first?.type.name.mainColor ?? .clear))
     }
     
     func getPokemonName() -> String{

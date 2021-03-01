@@ -10,10 +10,17 @@ import UIKit
 class DetailsViewController: UIViewController {
     private var detailsViewModel: DetailsViewModel?
     
+    private let detailsHeaderView: DetailsHeaderView = DetailsHeaderView()
+    
+    private let viewContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.backgroundColor = .clear
-        tableView.register(DetailsHeaderView.self, forHeaderFooterViewReuseIdentifier: DetailsHeaderView.reuseId)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
@@ -23,12 +30,20 @@ class DetailsViewController: UIViewController {
     
     public func configureDetailView(with detailsViewModel: DetailsViewModel){
         self.detailsViewModel = detailsViewModel
-        self.view.backgroundColor = detailsViewModel.mainColor
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
+        self.setupHeaderView()
         self.addSubviews()
         self.setupLayout()
+    }
+    
+    private func setupHeaderView(){
+        if let headerViewModel = detailsViewModel?.headerViewModel{
+            self.detailsHeaderView.configureHeader(detailHeaderViewModel: headerViewModel)
+            self.detailsHeaderView.layoutIfNeeded()
+            self.tableView.tableHeaderView = self.detailsHeaderView
+        }
     }
     
     private func addSubviews(){
@@ -42,6 +57,16 @@ class DetailsViewController: UIViewController {
             tableView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
+        
+        //make background gradient
+        if let mainColor = detailsViewModel?.mainColor, let endColor = detailsViewModel?.endColor{
+            let gradient = CAGradientLayer()
+            gradient.colors = [mainColor.cgColor, endColor.cgColor]
+            gradient.frame = self.view.frame
+            gradient.startPoint = CGPoint(x: 0, y: 0)
+            gradient.endPoint = CGPoint(x: 1, y: 0)
+            self.view.layer.insertSublayer(gradient, at: 0)
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -56,18 +81,10 @@ class DetailsViewController: UIViewController {
 
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        2
+        0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         UITableViewCell()
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: DetailsHeaderView.reuseId) as? DetailsHeaderView, let headerViewModel = self.detailsViewModel?.headerViewModel{
-            header.configureHeader(detailHeaderViewModel: headerViewModel)
-            return header
-        }
-        return UIView()
     }
 }

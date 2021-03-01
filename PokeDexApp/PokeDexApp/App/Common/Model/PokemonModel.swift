@@ -102,49 +102,94 @@ enum PokemonType: String, Decodable {
     case unknown
     case shadow
     
-    //get official pokemon colors from https://wiki.pokemoncentral.it/
-    func color() -> UIColor {
+    //get official pokemon colors from https://wiki.pokemoncentral.it/Tipo
+    var mainColor: UIColor {
         switch self {
         case .normal:
-            return #colorLiteral(red: 0.5470016599, green: 0.5810818076, blue: 0.6109013557, alpha: 1)
+            return #colorLiteral(red: 0.5716369748, green: 0.6002758145, blue: 0.6475561261, alpha: 1)
         case .fighting:
-            return #colorLiteral(red: 0.7882104516, green: 0.2428354025, blue: 0.4018281698, alpha: 1)
+            return #colorLiteral(red: 0.880083859, green: 0.1892808676, blue: 0.3863664269, alpha: 1)
         case .flying:
-            return #colorLiteral(red: 0.5387618542, green: 0.6427439451, blue: 0.8565696478, alpha: 1)
+            return #colorLiteral(red: 0.5495741367, green: 0.6584999561, blue: 0.8765556812, alpha: 1)
         case .poison:
-            return #colorLiteral(red: 0.6553355455, green: 0.4089289308, blue: 0.7780326009, alpha: 1)
+            return #colorLiteral(red: 0.7127818465, green: 0.3641316593, blue: 0.8076178432, alpha: 1)
         case .ground:
-            return #colorLiteral(red: 0.8289013505, green: 0.4496176243, blue: 0.2513646185, alpha: 1)
+            return #colorLiteral(red: 0.9211483002, green: 0.4423263669, blue: 0.2223921418, alpha: 1)
         case .rock:
-            return #colorLiteral(red: 0.7535194755, green: 0.6981111765, blue: 0.5252377987, alpha: 1)
+            return #colorLiteral(red: 0.7886140943, green: 0.709207356, blue: 0.5137671232, alpha: 1)
         case .bug:
-            return #colorLiteral(red: 0.5493260622, green: 0.7307934165, blue: 0.1643458307, alpha: 1)
+            return #colorLiteral(red: 0.5278400779, green: 0.7478100657, blue: 0, alpha: 1)
         case .ghost:
-            return #colorLiteral(red: 0.3100687563, green: 0.4014959931, blue: 0.6659750938, alpha: 1)
+            return #colorLiteral(red: 0.3072502315, green: 0.413003087, blue: 0.7028397918, alpha: 1)
         case .steel:
-            return #colorLiteral(red: 0.3447906971, green: 0.5452088714, blue: 0.6202380061, alpha: 1)
+            return #colorLiteral(red: 0.2502724528, green: 0.5344678164, blue: 0.6258850098, alpha: 1)
         case .fire:
-            return #colorLiteral(red: 0.9765924811, green: 0.5927538872, blue: 0.3088889122, alpha: 1)
+            return #colorLiteral(red: 1, green: 0.5929041505, blue: 0.2348099649, alpha: 1)
         case .water:
-            return #colorLiteral(red: 0.2954151034, green: 0.5502636433, blue: 0.8214174509, alpha: 1)
+            return #colorLiteral(red: 0.2218952477, green: 0.6230598092, blue: 0.8972640038, alpha: 1)
         case .grass:
-            return #colorLiteral(red: 0.3756253123, green: 0.721344173, blue: 0.3435608149, alpha: 1)
+            return #colorLiteral(red: 0.1684704125, green: 0.7559096813, blue: 0.2590118647, alpha: 1)
         case .electric:
-            return #colorLiteral(red: 0.9248973727, green: 0.795854032, blue: 0.2178544104, alpha: 1)
+            return #colorLiteral(red: 0.9490627646, green: 0.8404652476, blue: 0, alpha: 1)
+        case .psychic:
+            return #colorLiteral(red: 1, green: 0.4060875177, blue: 0.4327207804, alpha: 1)
+        case .ice:
+            return #colorLiteral(red: 0.2953563631, green: 0.8154250383, blue: 0.7444574237, alpha: 1)
+        case .dragon:
+            return #colorLiteral(red: 0, green: 0.4185396433, blue: 0.8112379909, alpha: 1)
+        case .dark:
+            return #colorLiteral(red: 0.355060488, green: 0.3440642953, blue: 0.3920295835, alpha: 1)
+        case .fairy:
+            return #colorLiteral(red: 0.9902945161, green: 0.5258321166, blue: 0.9177828431, alpha: 1)
+        case .shadow:
+            return #colorLiteral(red: 0.2507422864, green: 0.2035931051, blue: 0.3424940407, alpha: 1)
+        case .unknown:
+            return #colorLiteral(red: 0.2782413363, green: 0.4239462614, blue: 0.3825690746, alpha: 1)
+        }
+    }
+    
+    var endColor: UIColor {
+        switch self {
+        case .normal:
+            return #colorLiteral(red: 0.5716369748, green: 0.6002758145, blue: 0.6475561261, alpha: 1)
+        case .fighting:
+            return #colorLiteral(red: 0.9739872813, green: 0.1754835248, blue: 0.2562509775, alpha: 1)
+        case .flying:
+            return #colorLiteral(red: 0.6187397838, green: 0.7536559701, blue: 0.9586126208, alpha: 1)
+        case .poison:
+            return #colorLiteral(red: 0.8102468848, green: 0.3396695852, blue: 0.8522182107, alpha: 1)
+        case .ground:
+            return #colorLiteral(red: 0.8652047515, green: 0.5614356995, blue: 0.342061609, alpha: 1)
+        case .rock:
+            return #colorLiteral(red: 0.8462945819, green: 0.7972704768, blue: 0.5281767249, alpha: 1)
+        case .bug:
+            return #colorLiteral(red: 0.6490378976, green: 0.7893058062, blue: 0, alpha: 1)
+        case .ghost:
+            return #colorLiteral(red: 0.4711506367, green: 0.4411643147, blue: 0.8536420465, alpha: 1)
+        case .steel:
+            return #colorLiteral(red: 0.2158685029, green: 0.6516324282, blue: 0.6685814261, alpha: 1)
+        case .fire:
+            return #colorLiteral(red: 1, green: 0.665902853, blue: 0.1286484301, alpha: 1)
+        case .water:
+            return #colorLiteral(red: 0.2920359969, green: 0.732037127, blue: 0.9077424407, alpha: 1)
+        case .grass:
+            return #colorLiteral(red: 0.07089930028, green: 0.7674418092, blue: 0.4301987886, alpha: 1)
+        case .electric:
+            return #colorLiteral(red: 1, green: 0.8867517114, blue: 0.3580238521, alpha: 1)
         case .psychic:
             return #colorLiteral(red: 0.9490309358, green: 0.4241904616, blue: 0.4450967908, alpha: 1)
         case .ice:
-            return #colorLiteral(red: 0.4311455488, green: 0.789681673, blue: 0.7284545302, alpha: 1)
+            return #colorLiteral(red: 0.4338750839, green: 0.8733255863, blue: 0.8287960291, alpha: 1)
         case .dragon:
-            return #colorLiteral(red: 0.04432298988, green: 0.4193534553, blue: 0.7448943257, alpha: 1)
+            return #colorLiteral(red: 0, green: 0.501458168, blue: 0.8041072488, alpha: 1)
         case .dark:
             return #colorLiteral(red: 0.3428039551, green: 0.3115460575, blue: 0.3858483136, alpha: 1)
         case .fairy:
-            return #colorLiteral(red: 0.9011231065, green: 0.5376293063, blue: 0.8814260364, alpha: 1)
+            return #colorLiteral(red: 1, green: 0.6250781417, blue: 0.9216451049, alpha: 1)
         case .shadow:
-            return #colorLiteral(red: 0.3643115163, green: 0.2998460233, blue: 0.4993721843, alpha: 1)
+            return #colorLiteral(red: 0.3721669614, green: 0.307719171, blue: 0.5072653294, alpha: 1)
         case .unknown:
-            return #colorLiteral(red: 0.3985958099, green: 0.6181690097, blue: 0.5583426952, alpha: 1)
+            return #colorLiteral(red: 0.4000579417, green: 0.6141328812, blue: 0.5543600917, alpha: 1)
         }
     }
     

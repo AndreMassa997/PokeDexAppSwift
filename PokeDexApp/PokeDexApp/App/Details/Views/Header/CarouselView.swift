@@ -59,7 +59,7 @@ final class CarouselView: UIView{
             collectionView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
             //page control
-            pageControl.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20),
+            pageControl.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 5),
             pageControl.leftAnchor.constraint(equalTo: self.leftAnchor),
             pageControl.rightAnchor.constraint(equalTo: self.rightAnchor),
             pageControl.bottomAnchor.constraint(equalTo: self.bottomAnchor),

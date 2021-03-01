@@ -12,11 +12,13 @@ final class DetailsViewModel{
     
     let headerViewModel: DetailsHeaderViewModel
     let mainColor: UIColor
+    let endColor: UIColor
     
     init(with coordinator: DetailsCoordinator, pokemonModel: PokemonModel){
         self.coordinator = coordinator
         self.headerViewModel = DetailsHeaderViewModel(pokemonModel: pokemonModel)
-        self.mainColor = pokemonModel.types?.first?.type.name.color() ?? .clear
+        self.mainColor = pokemonModel.types?.first?.type.name.mainColor ?? .clear
+        self.endColor = pokemonModel.types?.first?.type.name.endColor ?? .clear
     }
 
     public func viewDidDisappear(){

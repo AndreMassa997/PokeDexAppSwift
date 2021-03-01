@@ -87,6 +87,6 @@ class PokemonCollectionViewCell: UICollectionViewCell{
         
         self.image.downloadFromUrl(from: pokemonModel.imageURL, contentMode: .scaleAspectFit)
         self.nameLabel.text = pokemonModel.name.capitalized
-        self.view.backgroundColor = pokemonModel.type?.color()
+        self.view.backgroundColor = pokemonModel.type?.mainColor
     }
 }
