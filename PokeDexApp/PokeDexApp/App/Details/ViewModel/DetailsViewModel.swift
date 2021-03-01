@@ -11,6 +11,7 @@ final class DetailsViewModel{
     let coordinator: DetailsCoordinator
     
     let headerViewModel: DetailsHeaderViewModel
+    let statsViewModels: [StatsViewModel]
     let mainColor: UIColor
     let endColor: UIColor
     
@@ -19,6 +20,9 @@ final class DetailsViewModel{
         self.headerViewModel = DetailsHeaderViewModel(pokemonModel: pokemonModel)
         self.mainColor = pokemonModel.types?.first?.type.name.mainColor ?? .clear
         self.endColor = pokemonModel.types?.first?.type.name.endColor ?? .clear
+        self.statsViewModels = pokemonModel.stats?.compactMap{ stat in
+            StatsViewModel(stats: stat, mainColor: pokemonModel.types?.first?.type.name.mainColor ?? .clear, endColor: pokemonModel.types?.first?.type.name.endColor ?? .clear)
+        } ?? []
     }
 
     public func viewDidDisappear(){

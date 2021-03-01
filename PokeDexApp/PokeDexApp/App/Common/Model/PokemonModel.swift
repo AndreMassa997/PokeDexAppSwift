@@ -63,8 +63,52 @@ struct Stats: Decodable {
 
 // MARK: - Stat
 struct Stat: Decodable {
-    let name: String
+    let name: StatName
     let url: URL
+}
+
+enum StatName: String, Decodable{
+    case hp
+    case attack
+    case defense
+    case specialAttack = "special-attack"
+    case specialDefense = "special-defense"
+    case speed
+
+    var name: String{
+        switch self {
+        case .hp:
+            return "HP"
+        case .attack:
+            return "ATK"
+        case .defense:
+            return "DEF"
+        case .specialAttack:
+            return "SATK"
+        case .specialDefense:
+            return "SDEF"
+        case .speed:
+            return "SPD"
+        }
+    }
+    
+    var maxValue: Float{
+        switch self {
+        case .hp:
+            return 255
+        case .attack:
+            return 181
+        case .defense:
+            return 230
+        case .specialAttack:
+            return 173
+        case .specialDefense:
+            return 230
+        case .speed:
+            return 200
+        }
+    }
+    
 }
 
 // MARK: - TypeElement

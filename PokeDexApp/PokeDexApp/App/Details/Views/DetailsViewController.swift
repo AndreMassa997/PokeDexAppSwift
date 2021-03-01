@@ -19,6 +19,7 @@ class DetailsViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
+        tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: StatsTableViewCell.reusableId)
         return tableView
     }()
     
@@ -37,7 +38,7 @@ class DetailsViewController: UIViewController {
     private func setupHeaderView(){
         if let headerViewModel = detailsViewModel?.headerViewModel{
             self.detailsHeaderView.configureHeader(detailHeaderViewModel: headerViewModel)
-            self.detailsHeaderView.layoutIfNeeded()
+            self.detailsHeaderView.frame = CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: detailsHeaderView.getHeaderHeight())
             self.tableView.tableHeaderView = self.detailsHeaderView
         }
     }
@@ -77,11 +78,29 @@ class DetailsViewController: UIViewController {
 
 //MARK: -TABLE VIEW DELEGATE, DATA SOURCE
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        0
+        switch section {
+        case 0:
+            return self.detailsViewModel?.statsViewModels.count ?? 0
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        UITableViewCell()
+        switch indexPath.section {
+        case 0:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: StatsTableViewCell.reusableId) as? StatsTableViewCell, let statViewModel = self.detailsViewModel?.statsViewModels[indexPath.row]{
+                cell.configureStatCell(statsViewModel: statViewModel)
+                return cell
+            }
+        default: break
+            
+        }
+        return UITableViewCell()
     }
 }

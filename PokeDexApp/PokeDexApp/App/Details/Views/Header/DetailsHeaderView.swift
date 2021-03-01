@@ -50,8 +50,6 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         self.detailsHeaderViewModel = detailHeaderViewModel
         self.backgroundView = UIView()
         self.backgroundView?.backgroundColor = .clear
-        self.autoresizingMask = .flexibleHeight
-        self.contentView.autoresizingMask = .flexibleHeight
         
         self.imageCarouselView.configureCarousel(carouselViewModel: detailHeaderViewModel.carouselViewModel)
         self.nameLabel.text = detailHeaderViewModel.getPokemonName().capitalized
@@ -60,6 +58,10 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         
         self.addSubviews()
         self.setupLayout()
+    }
+    
+    func getHeaderHeight() -> CGFloat{
+        self.viewContainer.frame.origin.y + self.viewContainer.frame.height
     }
     
     //MARK: -PRIVATE METHODS
@@ -94,6 +96,7 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
             typesCollectionView.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
             typesCollectionView.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
         ])
+        self.layoutIfNeeded()
     }
 }
 

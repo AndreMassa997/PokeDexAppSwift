@@ -27,6 +27,8 @@
 		3EA3C82825E7A71200CBFEE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA3C82725E7A71200CBFEE7 /* AppDelegate.swift */; };
 		3EA3C83125E7A71300CBFEE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA3C83025E7A71300CBFEE7 /* Assets.xcassets */; };
 		3EA3C83425E7A71300CBFEE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA3C83225E7A71300CBFEE7 /* LaunchScreen.storyboard */; };
+		3EAE73F925ECF54B0040153F /* StatsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE73F825ECF54B0040153F /* StatsTableViewCell.swift */; };
+		3EAE73FC25ECF7910040153F /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE73FB25ECF7910040153F /* StatsViewModel.swift */; };
 		3EC412DE25EBE4F70080C328 /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC412DD25EBE4F70080C328 /* CarouselView.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +55,8 @@
 		3EA3C83025E7A71300CBFEE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3EA3C83325E7A71300CBFEE7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3EA3C83525E7A71300CBFEE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3EAE73F825ECF54B0040153F /* StatsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsTableViewCell.swift; sourceTree = "<group>"; };
+		3EAE73FB25ECF7910040153F /* StatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewModel.swift; sourceTree = "<group>"; };
 		3EC412DD25EBE4F70080C328 /* CarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,6 +87,7 @@
 			children = (
 				3E62412B25EBBA11001A8671 /* Header */,
 				3E55393325E81D300093214A /* DetailsViewModel.swift */,
+				3EAE73FB25ECF7910040153F /* StatsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -92,6 +97,7 @@
 			children = (
 				3E62412625EBB6C8001A8671 /* Header */,
 				3E55393625E81D360093214A /* DetailsViewController.swift */,
+				3EAE73F825ECF54B0040153F /* StatsTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -302,11 +308,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E62412D25EBBA3D001A8671 /* DetailsHeaderViewModel.swift in Sources */,
+				3EAE73F925ECF54B0040153F /* StatsTableViewCell.swift in Sources */,
 				3E7CC0B925E7E6FC00823793 /* MainViewModel.swift in Sources */,
 				3E7CC0AD25E7E15900823793 /* AppCoordinator.swift in Sources */,
 				3E55393725E81D360093214A /* DetailsViewController.swift in Sources */,
 				3E821AFA25E92F4900BB991A /* LoaderCollectionReusableView.swift in Sources */,
 				3E821AEF25E9097500BB991A /* PokemonCollectionViewCell.swift in Sources */,
+				3EAE73FC25ECF7910040153F /* StatsViewModel.swift in Sources */,
 				3E7CC0B125E7E35800823793 /* MainCoordinator.swift in Sources */,
 				3E55393425E81D300093214A /* DetailsViewModel.swift in Sources */,
 				3E55392E25E81D1A0093214A /* PokeAPI.swift in Sources */,
