@@ -11,6 +11,7 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
     static let reuseId = "DetailsHeaderView"
     private var detailsHeaderViewModel: DetailsHeaderViewModel?
     
+    //MARK: -VIEWS DECLARATION
     private let imageCarouselView = CarouselView()
     
     private let viewContainer: UIView = {
@@ -33,7 +34,7 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         let collectionViewFlowLayout = UICollectionViewFlowLayout()
         collectionViewFlowLayout.minimumInteritemSpacing = 10
         collectionViewFlowLayout.minimumLineSpacing = 0
-        collectionViewFlowLayout.itemSize = CGSize(width: 120, height: 40)
+        collectionViewFlowLayout.itemSize = CGSize(width: 110, height: 30)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewFlowLayout)
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -44,6 +45,7 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         return collectionView
     }()
     
+    //MARK: -PUBLIC METHODS
     func configureHeader(detailHeaderViewModel: DetailsHeaderViewModel){
         self.detailsHeaderViewModel = detailHeaderViewModel
         self.backgroundView = UIView()
@@ -60,6 +62,7 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         self.setupLayout()
     }
     
+    //MARK: -PRIVATE METHODS
     private func addSubviews(){
         self.viewContainer.addSubview(nameLabel)
         self.viewContainer.addSubview(typesCollectionView)
@@ -87,13 +90,15 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
             nameLabel.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
             
             typesCollectionView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            typesCollectionView.heightAnchor.constraint(equalToConstant: 40),
+            typesCollectionView.heightAnchor.constraint(equalToConstant: 50),
             typesCollectionView.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
             typesCollectionView.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
         ])
     }
 }
 
+//MARK: -COLLECTION VIEW DELEGATE, DATASOURCE, LAYOUT
+//types chips collection view
 extension DetailsHeaderView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         self.detailsHeaderViewModel?.getTypes()?.count ?? 0
@@ -110,10 +115,10 @@ extension DetailsHeaderView: UICollectionViewDelegate, UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView,
                          layout collectionViewLayout: UICollectionViewLayout,
                          insetForSectionAt section: Int) -> UIEdgeInsets{
-        let totalCellWidth: CGFloat = 120 * CGFloat(collectionView.numberOfItems(inSection: section))
+        let totalCellWidth: CGFloat = 110 * CGFloat(collectionView.numberOfItems(inSection: section))
         let totalSpacingWidth = 10 * CGFloat(collectionView.numberOfItems(inSection: section) - 1)
         let leftRightInsets = (collectionView.bounds.width - (totalCellWidth + totalSpacingWidth))/2
-        return UIEdgeInsets(top: 0, left: leftRightInsets, bottom: 0, right: leftRightInsets)
+        return UIEdgeInsets(top: 10, left: leftRightInsets, bottom: 10, right: leftRightInsets)
     }
     
 }

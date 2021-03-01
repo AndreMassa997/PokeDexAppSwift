@@ -9,7 +9,6 @@ import UIKit
 
 final class TypeCollectionViewCell: UICollectionViewCell{
     static let reusableId = "TypeCollectionViewCell"
-    private final let height: CGFloat = 40
     
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -56,14 +55,16 @@ final class TypeCollectionViewCell: UICollectionViewCell{
             self.nameLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -10)
         ])
         
-        contentView.layer.cornerRadius = 20
+        //setup corner radius and shadow of the chip
+        contentView.layer.cornerRadius = self.contentView.frame.height/2
         contentView.layer.masksToBounds = false
         layer.shadowColor = color.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 2.0)
-        layer.shadowRadius = 3
-        layer.shadowOpacity = 0.2
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.shadowRadius = 5
+        layer.shadowOpacity = 1
         layer.masksToBounds = false
-        layer.shadowPath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: 0, y: 15), size: bounds.size), cornerRadius: contentView.layer.cornerRadius).cgPath
+        contentView.clipsToBounds = false
+        layer.shadowPath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: 0, y: 0), size: bounds.size), cornerRadius: contentView.layer.cornerRadius).cgPath
     }
     
 }

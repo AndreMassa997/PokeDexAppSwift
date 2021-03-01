@@ -10,14 +10,8 @@ import UIKit
 class DetailsViewController: UIViewController {
     private var detailsViewModel: DetailsViewModel?
     
+    //MARK: -VIEWS DECLARATION
     private let detailsHeaderView: DetailsHeaderView = DetailsHeaderView()
-    
-    private let viewContainer: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.backgroundColor = .clear
@@ -28,6 +22,7 @@ class DetailsViewController: UIViewController {
         return tableView
     }()
     
+    //MARK: -PUBLIC METHODS
     public func configureDetailView(with detailsViewModel: DetailsViewModel){
         self.detailsViewModel = detailsViewModel
         self.tableView.dataSource = self
@@ -38,6 +33,7 @@ class DetailsViewController: UIViewController {
         self.setupLayout()
     }
     
+    //MARK: -PRIVATE METHODS
     private func setupHeaderView(){
         if let headerViewModel = detailsViewModel?.headerViewModel{
             self.detailsHeaderView.configureHeader(detailHeaderViewModel: headerViewModel)
@@ -79,6 +75,7 @@ class DetailsViewController: UIViewController {
     }
 }
 
+//MARK: -TABLE VIEW DELEGATE, DATA SOURCE
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         0
