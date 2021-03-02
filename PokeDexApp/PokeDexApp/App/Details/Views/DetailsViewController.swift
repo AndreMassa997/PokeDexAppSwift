@@ -31,6 +31,7 @@ class DetailsViewController: UIViewController {
         tableView.allowsSelection = false
         tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: StatsTableViewCell.reusableId)
         tableView.register(LoaderTableViewCell.self, forCellReuseIdentifier: LoaderTableViewCell.reusableId)
+        tableView.register(MovesTableViewCell.self, forCellReuseIdentifier: MovesTableViewCell.reusableId)
         return tableView
     }()
     
@@ -43,11 +44,6 @@ class DetailsViewController: UIViewController {
         self.setupHeaderView()
         self.addSubviews()
         self.setupLayout()
-        
-        //get the pokemon species and evolution chain of the pokemon
-        detailsViewModel.getPokemonSpeciesAndEvolutionChain(onSuccess: { [weak self] in
-            self?.tableView.reloadData()
-        })
     }
     
     //MARK: -PRIVATE METHODS
@@ -71,11 +67,10 @@ class DetailsViewController: UIViewController {
     
     private func setupLayout(){
         NSLayoutConstraint.activate([
-            dismissButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            dismissButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 10),
             dismissButton.heightAnchor.constraint(equalToConstant: 30),
             dismissButton.widthAnchor.constraint(equalToConstant: 30),
-            dismissButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
-            
+            dismissButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 10),
             
             
             tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
@@ -109,13 +104,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let section = self.detailsViewModel?.sectionViewModels[section]{
             switch section {
-            case .descriptions(let items), .evolutions(let items):
-                if let items = items{
-                    return items.count
-                }else{
-                    return 1
-                }
-            case .stats(let items):
+            case .abilities(let items), .stats(let items), .moves(let items):
                 return items.count
             }
         }
@@ -125,7 +114,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let item = self.detailsViewModel?.sectionViewModels[indexPath]{
             switch item {
-            case .description(let description):
+            case .ability(let abilityViewModel):
                 
                 break
             case .stat(let statViewModel):
@@ -133,20 +122,13 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
                     cell.configureStatCell(statViewModel: statViewModel)
                     return cell
                 }
-            case .evolution(let evolutionViewModel):
-                return UITableViewCell()
-            }
-        }else{
-            //if no items are in section show loader
-            if let cell = tableView.dequeueReusableCell(withIdentifier: LoaderTableViewCell.reusableId) as? LoaderTableViewCell{
-                cell.configLoader()
-                return cell
+            case .moves(let movesViewModel):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: MovesTableViewCell.reusableId) as? MovesTableViewCell{
+                    cell.configureCell(movesViewModel: movesViewModel)
+                    return cell
+                }
             }
         }
         return UITableViewCell()
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        UITableView.automaticDimension
     }
 }

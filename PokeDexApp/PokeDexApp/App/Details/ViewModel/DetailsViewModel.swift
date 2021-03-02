@@ -8,15 +8,15 @@
 import UIKit
 
 enum DetailsSectionViewModel{
-    case descriptions(items: [CellViewModel]?)
+    case abilities(items: [CellViewModel])
     case stats(items: [CellViewModel])
-    case evolutions(items: [CellViewModel]?)
+    case moves(items: [CellViewModel])
 }
 
 enum CellViewModel{
-    case description(description: String)
-    case stat(stat: StatViewModel)
-    case evolution(evolution: String)
+    case ability(abilityViewModel: AbilityViewModel)
+    case stat(statViewModel: StatViewModel)
+    case moves(movesViewModel: MovesViewModel)
 }
 
 final class DetailsViewModel{
@@ -25,7 +25,7 @@ final class DetailsViewModel{
     //data for header (carousel images, name, color and types)
     let headerViewModel: DetailsHeaderViewModel
     
-    //data for tableView (sections with description, stats and evolutions)
+    //data for tableView (sections with description, stats)
     private(set) var sectionViewModels: [DetailsSectionViewModel] = []
     
     //colors for background gradient
@@ -40,38 +40,31 @@ final class DetailsViewModel{
         self.endColor = pokemonModel.types?.first?.type.name.endColor ?? .clear
         self.id = pokemonModel.id
         
-        //append nil description
-        self.sectionViewModels.append(.descriptions(items: nil))
+        let mainColor = pokemonModel.types?.first?.type.name.mainColor ?? .clear
+        
+        //MARK: append data available from Pokemon model
+        
+        //append abilities into abilities section
+        self.sectionViewModels.append(.abilities(items: pokemonModel.abilities?.compactMap({ ability in
+            CellViewModel.ability(abilityViewModel: AbilityViewModel(ability: ability, mainColor: mainColor))
+        }) ?? []))
         
         //append stats into stats section
         self.sectionViewModels.append(.stats(items:
                                                 pokemonModel.stats?.compactMap{ stat in
-                                                    CellViewModel.stat(stat: StatViewModel(stats: stat, mainColor: pokemonModel.types?.first?.type.name.mainColor ?? .clear, endColor: pokemonModel.types?.first?.type.name.endColor ?? .clear))
+                                                    CellViewModel.stat(statViewModel: StatViewModel(stats: stat, mainColor: mainColor, endColor: pokemonModel.types?.first?.type.name.endColor ?? .clear))
                                                 } ?? []))
         
-        //append evolutions into evolution section
-        self.sectionViewModels.append(.evolutions(items: nil))
+        //append moves into stats section
+        self.sectionViewModels.append(.moves(
+                                        items: [CellViewModel.moves(movesViewModel: MovesViewModel(moves: pokemonModel.moves, mainColor: mainColor))]))
+        
     }
 
     //MARK: PUBLIC METHODS
     func onDismissTapped(){
         coordinator.dismissDetails()
     }
-    
-    func getPokemonSpeciesAndEvolutionChain(onSuccess: (() -> Void
-    )?){
-        self.coordinator.getPokemonSpecies(pokemonId: self.id, onSuccess: { [weak self] pokemonSpecies in
-            self?.sectionViewModels.remove(at: 0)
-            self?.sectionViewModels.insert(.descriptions(items: [.description(description: pokemonSpecies.flavorTextEntries.first?.flavorText ?? "")]), at: 0)
-            let idEvolutionChain = pokemonSpecies.evolutionChain.url.lastPathComponent
-            self?.coordinator.getEvolutionChain(idEvolutionChain: idEvolutionChain, onSuccess: { evolutionModel in
-                
-            })
-            onSuccess?()
-        })
-    }
-    
-    
     
     deinit {
         print("deinitialized DetailsViewModel")
@@ -83,10 +76,8 @@ extension Array where Element == DetailsSectionViewModel {
     subscript(indexPath: IndexPath) -> CellViewModel? {
         let section = self[indexPath.section]
         switch section {
-        case .stats(let items):
+        case .stats(let items), .abilities(let items), .moves(let items):
             return items[indexPath.row]
-        case .descriptions(let items), .evolutions(let items):
-            return items?[indexPath.row]
         }
     }
 }

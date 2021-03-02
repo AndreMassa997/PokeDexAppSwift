@@ -26,6 +26,7 @@ final class TypeCollectionViewCell: UICollectionViewCell{
         return imageView
     }()
     
+    //MARK: PUBLIC METHODS
     func configureCell(type: PokemonType){
         self.contentView.backgroundColor = type.mainColor
         self.nameLabel.text = type.rawValue.uppercased()
@@ -35,6 +36,7 @@ final class TypeCollectionViewCell: UICollectionViewCell{
         self.setupLayout(color: type.mainColor)
     }
     
+    //MARK: PRIVATE METHODS
     private func addSubviews(){
         self.contentView.addSubview(image)
         self.contentView.addSubview(nameLabel)

@@ -35,39 +35,6 @@ final class DetailsCoordinator: Coordinator{
         parentCoordinator?.removeCoordinator(self)
     }
     
-    func getPokemonSpecies(pokemonId: Int, onSuccess:((_ pokemonSpecies: PokemonSpecies) -> Void)?){
-        PokeAPI.shared.get(path: "pokemon-species/\(pokemonId)", onSuccess: { data in
-            do{
-            let jsonDecoder = JSONDecoder()
-            jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-            let pokemonSpecies = try jsonDecoder.decode(PokemonSpecies.self, from: data)
-            onSuccess?(pokemonSpecies)
-            }
-            catch let error{
-                print(error)
-            }
-        }, onErrorHandled: {
-            
-        })
-    }
-    
-    func getEvolutionChain(idEvolutionChain: String, onSuccess:((_ evolutionChain: EvolutionModel) -> Void)?){
-        PokeAPI.shared.get(path: "evolution-chain/\(idEvolutionChain)", onSuccess: { data in
-            do{
-                let jsonDecoder = JSONDecoder()
-                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                let evolutionModel = try jsonDecoder.decode(EvolutionModel.self, from: data)
-                onSuccess?(evolutionModel)
-            }
-            catch let error{
-                print(error)
-            }
-        }, onErrorHandled: {
-            
-        })
-    }
-    
-    
     deinit {
         print("deinitilized DetailsCoordinator")
     }
