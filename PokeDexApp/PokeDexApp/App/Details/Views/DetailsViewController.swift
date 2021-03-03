@@ -32,6 +32,7 @@ class DetailsViewController: UIViewController {
         tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: StatsTableViewCell.reusableId)
         tableView.register(LoaderTableViewCell.self, forCellReuseIdentifier: LoaderTableViewCell.reusableId)
         tableView.register(MovesTableViewCell.self, forCellReuseIdentifier: MovesTableViewCell.reusableId)
+        tableView.register(DimensionsTableViewCell.self, forCellReuseIdentifier: DimensionsTableViewCell.reusableId)
         return tableView
     }()
     
@@ -88,6 +89,8 @@ class DetailsViewController: UIViewController {
             gradient.endPoint = CGPoint(x: 1, y: 0)
             self.view.layer.insertSublayer(gradient, at: 0)
         }
+        
+        tableView.reloadData()
     }
     
     deinit {
@@ -104,7 +107,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let section = self.detailsViewModel?.sectionViewModels[section]{
             switch section {
-            case .abilities(let items), .stats(let items), .moves(let items):
+            case .abilities(let items), .dimensions(let items), .stats(let items), .moves(let items):
                 return items.count
             }
         }
@@ -115,8 +118,23 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
         if let item = self.detailsViewModel?.sectionViewModels[indexPath]{
             switch item {
             case .ability(let abilityViewModel):
-                
-                break
+                let cell = UITableViewCell()
+                let label = UILabel(frame: CGRect(x: 40, y: 0, width: tableView.frame.width-80, height: cell.frame.height))
+                label.text = abilityViewModel.abilityName.capitalized
+                label.textColor = abilityViewModel.mainColor
+                label.font = UIFont.systemFont(ofSize: 18, weight: .light)
+                cell.addSubview(label)
+                let separatorView = UIView(frame: CGRect(x: 30, y: cell.frame.height-1, width: tableView.frame.width-60, height: 1))
+                separatorView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+                if indexPath.row != (tableView.numberOfRows(inSection: indexPath.section)-1){
+                    cell.addSubview(separatorView)
+                }
+                return cell
+            case .dimensions(let dimensionsViewModel):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: DimensionsTableViewCell.reusableId) as? DimensionsTableViewCell{
+                    cell.configureCell(dimensionsViewModel: dimensionsViewModel)
+                    return cell
+                }
             case .stat(let statViewModel):
                 if let cell = tableView.dequeueReusableCell(withIdentifier: StatsTableViewCell.reusableId) as? StatsTableViewCell{
                     cell.configureStatCell(statViewModel: statViewModel)
@@ -130,5 +148,19 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
             }
         }
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
+        label.backgroundColor = .white
+        label.font = UIFont.systemFont(ofSize: 20, weight: .light)
+        label.textColor = self.detailsViewModel?.mainColor
+        label.textAlignment = .center
+        label.text = self.detailsViewModel?.sectionViewModels[section].getSectionName()
+        return label
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        40
     }
 }

@@ -17,7 +17,6 @@ class MovesTableViewCell: UITableViewCell {
         collectionViewFlowLayout.minimumInteritemSpacing = 10
         collectionViewFlowLayout.minimumLineSpacing = 10
         collectionViewFlowLayout.itemSize = CGSize(width: 90, height: 30)
-        collectionViewFlowLayout.scrollDirection = .horizontal
         collectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewFlowLayout)
         collectionView.backgroundColor = .clear
@@ -26,7 +25,7 @@ class MovesTableViewCell: UITableViewCell {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(MoveCollectionViewCell.self, forCellWithReuseIdentifier: MoveCollectionViewCell.reusableId)
         collectionView.allowsSelection = false
-        collectionView.isScrollEnabled = true
+        collectionView.isScrollEnabled = false
         return collectionView
     }()
     
@@ -40,7 +39,7 @@ class MovesTableViewCell: UITableViewCell {
         
         movesCollectionView.delegate = self
         movesCollectionView.dataSource = self
-        
+                
         self.addSubviews()
         self.setupLayout()
     }
@@ -52,12 +51,20 @@ class MovesTableViewCell: UITableViewCell {
     
     private func setupLayout(){
         NSLayoutConstraint.activate([
-            movesCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            movesCollectionView.heightAnchor.constraint(equalToConstant: 140),
             movesCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            movesCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
             movesCollectionView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             movesCollectionView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
         ])
+        movesCollectionView.layoutIfNeeded()
+    }
+    
+    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+        return movesCollectionView.contentSize
+    }
+    
+    override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
+        return movesCollectionView.contentSize
     }
 }
 

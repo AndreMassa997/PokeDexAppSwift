@@ -32,6 +32,8 @@
 		3EA3C82825E7A71200CBFEE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA3C82725E7A71200CBFEE7 /* AppDelegate.swift */; };
 		3EA3C83125E7A71300CBFEE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA3C83025E7A71300CBFEE7 /* Assets.xcassets */; };
 		3EA3C83425E7A71300CBFEE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA3C83225E7A71300CBFEE7 /* LaunchScreen.storyboard */; };
+		3EAE3AE925F0221000B4BD5C /* DimensionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE3AE825F0221000B4BD5C /* DimensionsViewModel.swift */; };
+		3EAE3AF325F0264500B4BD5C /* DimensionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE3AF225F0264500B4BD5C /* DimensionsTableViewCell.swift */; };
 		3EAE73F925ECF54B0040153F /* StatsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE73F825ECF54B0040153F /* StatsTableViewCell.swift */; };
 		3EAE73FC25ECF7910040153F /* StatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE73FB25ECF7910040153F /* StatViewModel.swift */; };
 		3EC412DE25EBE4F70080C328 /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC412DD25EBE4F70080C328 /* CarouselView.swift */; };
@@ -65,6 +67,8 @@
 		3EA3C83025E7A71300CBFEE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3EA3C83325E7A71300CBFEE7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3EA3C83525E7A71300CBFEE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3EAE3AE825F0221000B4BD5C /* DimensionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimensionsViewModel.swift; sourceTree = "<group>"; };
+		3EAE3AF225F0264500B4BD5C /* DimensionsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimensionsTableViewCell.swift; sourceTree = "<group>"; };
 		3EAE73F825ECF54B0040153F /* StatsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsTableViewCell.swift; sourceTree = "<group>"; };
 		3EAE73FB25ECF7910040153F /* StatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatViewModel.swift; sourceTree = "<group>"; };
 		3EC412DD25EBE4F70080C328 /* CarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselView.swift; sourceTree = "<group>"; };
@@ -103,6 +107,7 @@
 		3E55390E25E7EB810093214A /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				3EAE3AE725F021E400B4BD5C /* Dimensions */,
 				3E817DDF25EEB384003036E5 /* Abilities */,
 				3E817DD725EEB278003036E5 /* Moves */,
 				3EAE73FF25ED1ADB0040153F /* Stats */,
@@ -115,6 +120,7 @@
 		3E55390F25E7EB870093214A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3EAE3AED25F0260F00B4BD5C /* Dimensions */,
 				3E817DE625EEC374003036E5 /* Moves */,
 				3EAE73FE25ED1ACC0040153F /* Stats */,
 				3E62412625EBB6C8001A8671 /* Headers */,
@@ -285,6 +291,22 @@
 			path = PokeDexApp;
 			sourceTree = "<group>";
 		};
+		3EAE3AE725F021E400B4BD5C /* Dimensions */ = {
+			isa = PBXGroup;
+			children = (
+				3EAE3AE825F0221000B4BD5C /* DimensionsViewModel.swift */,
+			);
+			path = Dimensions;
+			sourceTree = "<group>";
+		};
+		3EAE3AED25F0260F00B4BD5C /* Dimensions */ = {
+			isa = PBXGroup;
+			children = (
+				3EAE3AF225F0264500B4BD5C /* DimensionsTableViewCell.swift */,
+			);
+			path = Dimensions;
+			sourceTree = "<group>";
+		};
 		3EAE73FE25ED1ACC0040153F /* Stats */ = {
 			isa = PBXGroup;
 			children = (
@@ -375,6 +397,7 @@
 				3E7CC0B925E7E6FC00823793 /* MainViewModel.swift in Sources */,
 				3E7CC0AD25E7E15900823793 /* AppCoordinator.swift in Sources */,
 				3E55393725E81D360093214A /* DetailsViewController.swift in Sources */,
+				3EAE3AF325F0264500B4BD5C /* DimensionsTableViewCell.swift in Sources */,
 				3E821AFA25E92F4900BB991A /* LoaderViews.swift in Sources */,
 				3E821AEF25E9097500BB991A /* PokemonCollectionViewCell.swift in Sources */,
 				3EAE73FC25ECF7910040153F /* StatViewModel.swift in Sources */,
@@ -385,6 +408,7 @@
 				3E817DE225EEB3A6003036E5 /* AbilityViewModel.swift in Sources */,
 				3EC412DE25EBE4F70080C328 /* CarouselView.swift in Sources */,
 				3E821AF425E90AE900BB991A /* PokemonModel.swift in Sources */,
+				3EAE3AE925F0221000B4BD5C /* DimensionsViewModel.swift in Sources */,
 				3E62411F25EBB116001A8671 /* DetailsHeaderView.swift in Sources */,
 				3E821AF725E90BC700BB991A /* Extensions.swift in Sources */,
 				3E817DE825EEC3BC003036E5 /* MovesTableViewCell.swift in Sources */,

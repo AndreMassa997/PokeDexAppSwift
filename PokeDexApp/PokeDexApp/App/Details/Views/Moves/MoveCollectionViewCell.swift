@@ -13,10 +13,11 @@ class MoveCollectionViewCell: UICollectionViewCell {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 10, weight: .medium)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.3
         return label
     }()
     
@@ -39,8 +40,8 @@ class MoveCollectionViewCell: UICollectionViewCell {
             //label constraints
             self.nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             self.nameLabel.heightAnchor.constraint(equalToConstant: 16),
-            self.nameLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 5),
-            self.nameLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -5)
+            self.nameLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
+            self.nameLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -10)
         ])
         
         self.nameLabel.textColor = color
@@ -48,7 +49,7 @@ class MoveCollectionViewCell: UICollectionViewCell {
         //setup corner radius and border of the chip
         contentView.layer.cornerRadius = self.contentView.frame.height/2
         contentView.layer.masksToBounds = false
-        contentView.layer.borderWidth = 1
+        contentView.layer.borderWidth = 0.5
         contentView.layer.borderColor = color.cgColor
     }
 }

@@ -12,8 +12,12 @@ import UIKit
 struct PokemonModel: Decodable {
     let id: Int
     let name: String
+    
+    //height in decimeters
     let height: Int?
+    //weight in hectograms
     let weight: Int?
+    
     let abilities: [Ability]?
     let sprites: Sprites?
     let moves: [Move]?

@@ -9,13 +9,21 @@ import UIKit
 
 enum DetailsSectionViewModel{
     case abilities(items: [CellViewModel])
+    case dimensions(items: [CellViewModel])
     case stats(items: [CellViewModel])
     case moves(items: [CellViewModel])
+    
+    //get the enum case name and capitalize it
+    func getSectionName() -> String?{
+        let mirror = Mirror(reflecting: self)
+        return mirror.children.first?.label?.capitalized
+    }
 }
 
 enum CellViewModel{
     case ability(abilityViewModel: AbilityViewModel)
     case stat(statViewModel: StatViewModel)
+    case dimensions(dimensionsViewModel: DimensionsViewModel)
     case moves(movesViewModel: MovesViewModel)
 }
 
@@ -44,10 +52,13 @@ final class DetailsViewModel{
         
         //MARK: append data available from Pokemon model
         
-        //append abilities into abilities section
+        //append abilities that are not hidden into abilities section
         self.sectionViewModels.append(.abilities(items: pokemonModel.abilities?.compactMap({ ability in
             CellViewModel.ability(abilityViewModel: AbilityViewModel(ability: ability, mainColor: mainColor))
         }) ?? []))
+        
+        //append height and weight
+        self.sectionViewModels.append(.dimensions(items: [CellViewModel.dimensions(dimensionsViewModel: DimensionsViewModel(height: pokemonModel.height ?? 0, weight: pokemonModel.weight ?? 0, mainColor: mainColor))]))
         
         //append stats into stats section
         self.sectionViewModels.append(.stats(items:
@@ -76,7 +87,7 @@ extension Array where Element == DetailsSectionViewModel {
     subscript(indexPath: IndexPath) -> CellViewModel? {
         let section = self[indexPath.section]
         switch section {
-        case .stats(let items), .abilities(let items), .moves(let items):
+        case .stats(let items), .dimensions(let items), .abilities(let items), .moves(let items):
             return items[indexPath.row]
         }
     }
