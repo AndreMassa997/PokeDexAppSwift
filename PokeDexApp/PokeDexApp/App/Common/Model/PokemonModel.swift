@@ -20,7 +20,6 @@ struct PokemonModel: Decodable {
     
     let abilities: [Ability]?
     let sprites: Sprites?
-    let moves: [Move]?
     let stats: [Stats]?
     let types: [TypeElement]?
 }
@@ -33,11 +32,6 @@ struct Ability: Decodable{
 
 struct Result: Decodable{
     let name: String
-}
-
-// MARK: Move
-struct Move: Decodable{
-    let move: Result
 }
 
 // MARK: - Sprites

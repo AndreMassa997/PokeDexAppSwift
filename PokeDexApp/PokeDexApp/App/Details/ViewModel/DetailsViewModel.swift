@@ -8,10 +8,9 @@
 import UIKit
 
 enum DetailsSectionViewModel{
-    case abilities(items: [CellViewModel])
     case dimensions(items: [CellViewModel])
     case stats(items: [CellViewModel])
-    case moves(items: [CellViewModel])
+    case abilities(items: [CellViewModel])
     
     //get the enum case name and capitalize it
     func getSectionName() -> String?{
@@ -21,10 +20,9 @@ enum DetailsSectionViewModel{
 }
 
 enum CellViewModel{
-    case ability(abilityViewModel: AbilityViewModel)
     case stat(statViewModel: StatViewModel)
     case dimensions(dimensionsViewModel: DimensionsViewModel)
-    case moves(movesViewModel: MovesViewModel)
+    case ability(abilityViewModel: AbilityViewModel)
 }
 
 final class DetailsViewModel{
@@ -47,15 +45,15 @@ final class DetailsViewModel{
         self.mainColor = pokemonModel.types?.first?.type.name.mainColor ?? .clear
         self.endColor = pokemonModel.types?.first?.type.name.endColor ?? .clear
         self.id = pokemonModel.id
-        
+
+        self.setupDataSource(pokemonModel: pokemonModel)
+    }
+    
+    
+    //MARK: PRIVATE METHODS
+    private func setupDataSource(pokemonModel: PokemonModel){
+        //MARK: append datas available from Pokemon model
         let mainColor = pokemonModel.types?.first?.type.name.mainColor ?? .clear
-        
-        //MARK: append data available from Pokemon model
-        
-        //append abilities that are not hidden into abilities section
-        self.sectionViewModels.append(.abilities(items: pokemonModel.abilities?.compactMap({ ability in
-            CellViewModel.ability(abilityViewModel: AbilityViewModel(ability: ability, mainColor: mainColor))
-        }) ?? []))
         
         //append height and weight
         self.sectionViewModels.append(.dimensions(items: [CellViewModel.dimensions(dimensionsViewModel: DimensionsViewModel(height: pokemonModel.height ?? 0, weight: pokemonModel.weight ?? 0, mainColor: mainColor))]))
@@ -66,9 +64,10 @@ final class DetailsViewModel{
                                                     CellViewModel.stat(statViewModel: StatViewModel(stats: stat, mainColor: mainColor, endColor: pokemonModel.types?.first?.type.name.endColor ?? .clear))
                                                 } ?? []))
         
-        //append moves into stats section
-        self.sectionViewModels.append(.moves(
-                                        items: [CellViewModel.moves(movesViewModel: MovesViewModel(moves: pokemonModel.moves, mainColor: mainColor))]))
+        //append abilities that are not hidden into abilities section
+        self.sectionViewModels.append(.abilities(items: pokemonModel.abilities?.compactMap({ ability in
+            CellViewModel.ability(abilityViewModel: AbilityViewModel(ability: ability, mainColor: mainColor))
+        }) ?? []))
         
     }
 
@@ -87,7 +86,7 @@ extension Array where Element == DetailsSectionViewModel {
     subscript(indexPath: IndexPath) -> CellViewModel? {
         let section = self[indexPath.section]
         switch section {
-        case .stats(let items), .dimensions(let items), .abilities(let items), .moves(let items):
+        case .stats(let items), .dimensions(let items), .abilities(let items):
             return items[indexPath.row]
         }
     }

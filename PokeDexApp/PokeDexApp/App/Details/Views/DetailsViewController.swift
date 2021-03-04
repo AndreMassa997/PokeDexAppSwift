@@ -31,7 +31,6 @@ class DetailsViewController: UIViewController {
         tableView.allowsSelection = false
         tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: StatsTableViewCell.reusableId)
         tableView.register(LoaderTableViewCell.self, forCellReuseIdentifier: LoaderTableViewCell.reusableId)
-        tableView.register(MovesTableViewCell.self, forCellReuseIdentifier: MovesTableViewCell.reusableId)
         tableView.register(DimensionsTableViewCell.self, forCellReuseIdentifier: DimensionsTableViewCell.reusableId)
         return tableView
     }()
@@ -107,7 +106,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let section = self.detailsViewModel?.sectionViewModels[section]{
             switch section {
-            case .abilities(let items), .dimensions(let items), .stats(let items), .moves(let items):
+            case .dimensions(let items), .stats(let items), .abilities(let items):
                 return items.count
             }
         }
@@ -117,6 +116,16 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let item = self.detailsViewModel?.sectionViewModels[indexPath]{
             switch item {
+            case .dimensions(let dimensionsViewModel):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: DimensionsTableViewCell.reusableId) as? DimensionsTableViewCell{
+                    cell.configureCell(dimensionsViewModel: dimensionsViewModel)
+                    return cell
+                }
+            case .stat(let statViewModel):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: StatsTableViewCell.reusableId) as? StatsTableViewCell{
+                    cell.configureStatCell(statViewModel: statViewModel)
+                    return cell
+                }
             case .ability(let abilityViewModel):
                 let cell = UITableViewCell()
                 let label = UILabel(frame: CGRect(x: 40, y: 0, width: tableView.frame.width-80, height: cell.frame.height))
@@ -130,21 +139,6 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
                     cell.addSubview(separatorView)
                 }
                 return cell
-            case .dimensions(let dimensionsViewModel):
-                if let cell = tableView.dequeueReusableCell(withIdentifier: DimensionsTableViewCell.reusableId) as? DimensionsTableViewCell{
-                    cell.configureCell(dimensionsViewModel: dimensionsViewModel)
-                    return cell
-                }
-            case .stat(let statViewModel):
-                if let cell = tableView.dequeueReusableCell(withIdentifier: StatsTableViewCell.reusableId) as? StatsTableViewCell{
-                    cell.configureStatCell(statViewModel: statViewModel)
-                    return cell
-                }
-            case .moves(let movesViewModel):
-                if let cell = tableView.dequeueReusableCell(withIdentifier: MovesTableViewCell.reusableId) as? MovesTableViewCell{
-                    cell.configureCell(movesViewModel: movesViewModel)
-                    return cell
-                }
             }
         }
         return UITableViewCell()
