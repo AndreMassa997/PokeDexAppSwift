@@ -56,11 +56,9 @@ class StatsTableViewCell: UITableViewCell {
             progressBar.leftAnchor.constraint(equalTo: valueLabel.rightAnchor, constant: 10),
             progressBar.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
             progressBar.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            progressBar.heightAnchor.constraint(equalToConstant: 5),
+            progressBar.heightAnchor.constraint(equalToConstant: 6),
         ])
-        
         contentView.backgroundColor = .white
-        
     }
     
     //MARK: PUBLIC METHODS

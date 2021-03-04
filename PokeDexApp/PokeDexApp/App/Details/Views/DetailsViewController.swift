@@ -15,9 +15,9 @@ class DetailsViewController: UIViewController {
     
     private let dismissButton: UIButton = {
         let button = UIButton(frame: .zero)
-        button.setImage(UIImage(named: "arrow_down"), for: .normal)
+        button.setImage(UIImage(named: "arrow_left"), for: .normal)
         button.tintColor = .white
-        button.addTarget(self, action: #selector(onDismissTap), for: .touchUpInside)
+        button.addTarget(self, action: #selector(onBackTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -41,15 +41,20 @@ class DetailsViewController: UIViewController {
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
-        self.setupHeaderView()
         self.addSubviews()
         self.setupLayout()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(changeOrientation), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     //MARK: -PRIVATE METHODS
-    @objc private func onDismissTap(sender: UIButton!){
-        self.dismiss(animated: true, completion: nil)
-        detailsViewModel?.onDismissTapped()
+    @objc private func changeOrientation(){
+        self.setBackgroundGradient()
+        self.setupHeaderView()
+    }
+    
+    @objc private func onBackTapped(sender: UIButton!){
+        detailsViewModel?.onBackTapped()
     }
     
     private func setupHeaderView(){
@@ -72,14 +77,17 @@ class DetailsViewController: UIViewController {
             dismissButton.widthAnchor.constraint(equalToConstant: 30),
             dismissButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 10),
             
-            
             tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             tableView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
             tableView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
-        
-        //make background gradient
+        self.setBackgroundGradient()
+        self.setupHeaderView()
+    }
+    
+    //makes background gradient
+    private func setBackgroundGradient(){
         if let mainColor = detailsViewModel?.mainColor, let endColor = detailsViewModel?.endColor{
             let gradient = CAGradientLayer()
             gradient.colors = [mainColor.cgColor, endColor.cgColor]
@@ -88,8 +96,6 @@ class DetailsViewController: UIViewController {
             gradient.endPoint = CGPoint(x: 1, y: 0)
             self.view.layer.insertSublayer(gradient, at: 0)
         }
-        
-        tableView.reloadData()
     }
     
     deinit {

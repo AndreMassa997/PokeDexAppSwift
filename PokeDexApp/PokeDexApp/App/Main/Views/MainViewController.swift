@@ -28,6 +28,7 @@ class MainViewController: UIViewController {
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(LoaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: LoaderCollectionReusableView.reusableId)
+        collectionView.register(SearchCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SearchCollectionReusableView.reusableId)
         collectionView.register(PokemonCollectionViewCell.self, forCellWithReuseIdentifier: PokemonCollectionViewCell.reusableId)
         return collectionView
     }()
@@ -64,7 +65,7 @@ class MainViewController: UIViewController {
 }
 
 //MARK: UICollectionViewDelegate, UICollectionViewDataSource
-extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource{
+extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         mainViewModel?.pokemons.count ?? 0
     }
@@ -93,10 +94,26 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LoaderCollectionReusableView.reusableId, for: indexPath) as? LoaderCollectionReusableView{
-            footer.configLoader()
-            self.footerLoaderView = footer
-            return footer
+        if kind == UICollectionView.elementKindSectionHeader{
+            if let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SearchCollectionReusableView.reusableId, for: indexPath) as? SearchCollectionReusableView{
+                header.configSearchBar(
+                    onSearch: { [weak self] searchedText in
+                        self?.mainViewModel?.searchPokemon(text: searchedText, onSuccess: {
+                            self?.collectionView.reloadData()
+                        }, onError: {
+                            
+                        })
+                }, onFinishSearch: {
+                    
+                })
+                return header
+            }
+        }else{
+            if let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LoaderCollectionReusableView.reusableId, for: indexPath) as? LoaderCollectionReusableView{
+                footer.configLoader()
+                self.footerLoaderView = footer
+                return footer
+            }
         }
         return UICollectionReusableView()
     }
@@ -111,5 +128,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let pokemon = self.mainViewModel?.pokemons[indexPath.item] else { return }
         self.mainViewModel?.didSelectPokemon(pokemon: pokemon)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        CGSize(width: collectionView.frame.size.width, height: 60)
     }
 }

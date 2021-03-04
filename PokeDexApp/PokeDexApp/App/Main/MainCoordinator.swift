@@ -85,6 +85,24 @@ final class MainCoordinator: Coordinator{
                             })
     }
     
+    func searchPokemonLocally(text: String, onSuccess: ((_ pokemons: [PokemonCellViewModel]) -> Void)?, onError: (()->Void)?){
+        let filteredPokemons: [PokemonCellViewModel] = self.pokemons.compactMap{ pokemon in
+            //search by id
+            if let id = Int(text), pokemon.id == id{
+                return PokemonCellViewModel(pokemonModel: pokemon)
+            }else if pokemon.name.lowercased().contains(text.lowercased()){
+                //search by name
+                return PokemonCellViewModel(pokemonModel: pokemon)
+            }
+            return nil
+        }
+        if filteredPokemons.count > 0{
+            onSuccess?(filteredPokemons)
+        }else{
+            onError?()
+        }
+    }
+    
     
     
     

@@ -20,4 +20,10 @@ struct PokemonCellViewModel{
         self.type = pokemonModel.types?.first?.type.name
         self.imageURL = pokemonModel.sprites?.other?.officialArtwork?.frontDefault ?? pokemonModel.sprites?.other?.dreamWorld?.frontDefault
     }
+    
+    func getPokemonId() -> String {
+        let formatter = NumberFormatter()
+        formatter.minimumIntegerDigits = 3
+        return formatter.string(from: NSNumber(value: self.id)) ?? ""
+    }
 }

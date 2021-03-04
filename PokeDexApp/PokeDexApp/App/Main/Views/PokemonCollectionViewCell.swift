@@ -25,9 +25,19 @@ class PokemonCollectionViewCell: UICollectionViewCell{
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
+    
     private let nameLabel: UILabel = {
         let label: UILabel = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .black)
+        label.textAlignment = .center
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let idLabel: UILabel = {
+        let label: UILabel = UILabel()
+        label.font = UIFont.systemFont(ofSize: 10, weight: .light)
         label.textAlignment = .center
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -40,6 +50,7 @@ class PokemonCollectionViewCell: UICollectionViewCell{
         self.contentView.addSubview(view)
         self.contentView.addSubview(image)
         self.contentView.addSubview(nameLabel)
+        self.contentView.addSubview(idLabel)
     }
     
     //Setup UI and constraints of pokemon cell
@@ -58,11 +69,17 @@ class PokemonCollectionViewCell: UICollectionViewCell{
             view.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            //label constraints
+            //name label constraints
             nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor),
             nameLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             nameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-            nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            nameLabel.heightAnchor.constraint(equalToConstant: 30),
+            
+            //id label constraints
+            idLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
+            idLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+            idLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+            idLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
         ])
     }
     
@@ -87,6 +104,7 @@ class PokemonCollectionViewCell: UICollectionViewCell{
         
         self.image.downloadFromUrl(from: pokemonModel.imageURL, contentMode: .scaleAspectFit)
         self.nameLabel.text = pokemonModel.name.capitalized
+        self.idLabel.text = "#"+pokemonModel.getPokemonId()
         self.view.backgroundColor = pokemonModel.type?.mainColor
     }
 }

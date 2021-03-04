@@ -24,9 +24,9 @@ final class DetailsCoordinator: Coordinator{
     func start() {
         let detailsViewController = DetailsViewController()
         let detailsViewModel = DetailsViewModel(with: self, pokemonModel: pokemonModel)
-        detailsViewController.modalPresentationStyle = .fullScreen
+        detailsViewController.modalPresentationStyle = .pageSheet
         detailsViewController.configureDetailView(with: detailsViewModel)
-        navigationController.present(detailsViewController, animated: true)
+        navigationController.pushViewController(detailsViewController, animated: true)
     }
     
     //Call on viewDidDisappear to deallocate coordinator instance

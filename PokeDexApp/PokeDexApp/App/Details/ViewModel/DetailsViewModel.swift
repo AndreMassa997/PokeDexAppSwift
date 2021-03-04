@@ -61,7 +61,7 @@ final class DetailsViewModel{
         //append stats into stats section
         self.sectionViewModels.append(.stats(items:
                                                 pokemonModel.stats?.compactMap{ stat in
-                                                    CellViewModel.stat(statViewModel: StatViewModel(stats: stat, mainColor: mainColor, endColor: pokemonModel.types?.first?.type.name.endColor ?? .clear))
+                                                    CellViewModel.stat(statViewModel: StatViewModel(stats: stat, mainColor: mainColor))
                                                 } ?? []))
         
         //append abilities that are not hidden into abilities section
@@ -72,7 +72,7 @@ final class DetailsViewModel{
     }
 
     //MARK: PUBLIC METHODS
-    func onDismissTapped(){
+    func onBackTapped(){
         coordinator.dismissDetails()
     }
     

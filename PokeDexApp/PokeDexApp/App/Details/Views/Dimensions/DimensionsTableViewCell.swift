@@ -98,13 +98,13 @@ final class DimensionsTableViewCell: UITableViewCell{
             separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             separatorView.widthAnchor.constraint(equalToConstant: 1),
             
-            leftStackView.rightAnchor.constraint(equalTo: separatorView.leftAnchor, constant: -20),
-            leftStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
+            leftStackView.rightAnchor.constraint(equalTo: separatorView.leftAnchor, constant: -30),
+            leftStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
             leftStackView.heightAnchor.constraint(equalToConstant: 80),
             leftStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            rightStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20),
-            rightStackView.leftAnchor.constraint(equalTo: separatorView.rightAnchor, constant: 20),
+            rightStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
+            rightStackView.leftAnchor.constraint(equalTo: separatorView.rightAnchor, constant: 30),
             rightStackView.heightAnchor.constraint(equalToConstant: 80),
             rightStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])

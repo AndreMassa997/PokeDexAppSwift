@@ -105,8 +105,14 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
             typesCollectionView.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
         ])
         self.layoutIfNeeded()
+        self.setupCornerRadius()
+        self.typesCollectionView.collectionViewLayout.invalidateLayout()
+    }
+    
+    private func setupCornerRadius(){
         //round only top-left and top-right corners
-        let bounds = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: self.viewContainer.frame.height)
+        let viewWidth: CGFloat = UIScreen.main.bounds.width - (UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0) - (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0)
+        let bounds = CGRect(x: 0, y: 0, width: viewWidth, height: self.viewContainer.frame.height)
         self.viewContainer.roundCorners([.topLeft, .topRight], bounds: bounds, radius: 40)
     }
 }
@@ -131,8 +137,7 @@ extension DetailsHeaderView: UICollectionViewDelegate, UICollectionViewDataSourc
                          insetForSectionAt section: Int) -> UIEdgeInsets{
         let totalCellWidth: CGFloat = 110 * CGFloat(collectionView.numberOfItems(inSection: section))
         let totalSpacingWidth = 10 * CGFloat(collectionView.numberOfItems(inSection: section) - 1)
-        let leftRightInsets = (collectionView.bounds.width - (totalCellWidth + totalSpacingWidth))/2
+        let leftRightInsets = (collectionView.safeAreaLayoutGuide.layoutFrame.width - (totalCellWidth + totalSpacingWidth))/2
         return UIEdgeInsets(top: 10, left: leftRightInsets, bottom: 10, right: leftRightInsets)
     }
-    
 }

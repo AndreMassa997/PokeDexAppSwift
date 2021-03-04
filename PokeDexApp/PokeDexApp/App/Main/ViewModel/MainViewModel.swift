@@ -10,14 +10,9 @@ import Foundation
 final class MainViewModel{
     var coordinator: MainCoordinator?
     private(set) var pokemons: [PokemonCellViewModel] = []
+    private(set) var filtered: [PokemonCellViewModel] = []
     private(set) var nextOffset: Int = 0
-    
-    enum MainCollectionViewCell: Int{
-        case search
-        case pokemon
-        case loader
-        case label
-    }
+    private(set) var isSearching: Bool = false
     
     init(with coordinator: MainCoordinator){
         self.coordinator = coordinator
@@ -34,8 +29,20 @@ final class MainViewModel{
     }
 
     //pokemon from list tapped
-    public func didSelectPokemon(pokemon: PokemonCellViewModel){
+    func didSelectPokemon(pokemon: PokemonCellViewModel){
         coordinator?.showPokemonDetails(pokemon: pokemon)
     }
+    
+    func searchPokemon(text: String, onSuccess: (()->Void)?, onError: (()->Void)?){
+        coordinator?.searchPokemonLocally(text: text, onSuccess: { [weak self] pokemons in
+            self?.isSearching = true
+            self?.pokemons = pokemons
+            onSuccess?()
+        }, onError: {
+            
+        })
+    }
+    
+    
     
 }
