@@ -147,7 +147,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
         label.backgroundColor = .white
-        label.font = UIFont.systemFont(ofSize: 20, weight: .light)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .thin)
         label.textColor = self.detailsViewModel?.mainColor
         label.textAlignment = .center
         label.text = self.detailsViewModel?.sectionViewModels[section].getSectionName()

@@ -10,12 +10,13 @@ import UIKit
 final class DetailsHeaderViewModel{
     private let detailsHeaderModel: DetailHeaderModel
     let carouselViewModel: CarouselViewModel
+    
 
     init(pokemonModel: PokemonModel){
         let types: [Type]? = pokemonModel.types?.compactMap{ type in
             type.type
         }
-        self.detailsHeaderModel = DetailHeaderModel(name: pokemonModel.name, types: types)
+        self.detailsHeaderModel = DetailHeaderModel(name: pokemonModel.name, types: types, id: pokemonModel.id)
         
         let urls = [
         pokemonModel.sprites?.other?.officialArtwork?.frontDefault,
@@ -38,6 +39,12 @@ final class DetailsHeaderViewModel{
     
     func getTypes() -> [Type]?{
         self.detailsHeaderModel.types
+    }
+    
+    func getPokemonId() -> String {
+        let formatter = NumberFormatter()
+        formatter.minimumIntegerDigits = 3
+        return formatter.string(from: NSNumber(value: self.detailsHeaderModel.id)) ?? ""
     }
 }
 

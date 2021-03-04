@@ -21,10 +21,10 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         return view
     }()
     
-    private let nameLabel: UILabel = {
+    private let nameAndIdLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 30, weight: .light)
+        label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -51,7 +51,16 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         self.backgroundView?.backgroundColor = .clear
         
         self.imageCarouselView.configureCarousel(carouselViewModel: detailHeaderViewModel.carouselViewModel)
-        self.nameLabel.text = detailHeaderViewModel.getPokemonName().capitalized
+        
+        let mutableAttributedString = NSMutableAttributedString(string: detailHeaderViewModel.getPokemonName().capitalized, attributes: [
+            .font: UIFont.systemFont(ofSize: 30, weight: .light)
+        ])
+        let idString = NSAttributedString(string: "\n#\(detailHeaderViewModel.getPokemonId())", attributes: [
+            .font: UIFont.systemFont(ofSize: 14, weight: .thin)
+        ])
+        mutableAttributedString.append(idString)
+        
+        self.nameAndIdLabel.attributedText = mutableAttributedString
         typesCollectionView.delegate = self
         typesCollectionView.dataSource = self
         
@@ -65,7 +74,7 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
     
     //MARK: -PRIVATE METHODS
     private func addSubviews(){
-        self.viewContainer.addSubview(nameLabel)
+        self.viewContainer.addSubview(nameAndIdLabel)
         self.viewContainer.addSubview(typesCollectionView)
         self.contentView.addSubview(viewContainer)
         self.contentView.addSubview(imageCarouselView)
@@ -81,16 +90,16 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
             imageCarouselView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             
             viewContainer.topAnchor.constraint(equalTo: imageCarouselView.bottomAnchor, constant: -80),
-            viewContainer.heightAnchor.constraint(equalToConstant: 200),
+            viewContainer.heightAnchor.constraint(equalToConstant: 220),
             viewContainer.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             viewContainer.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             
-            nameLabel.topAnchor.constraint(equalTo: viewContainer.topAnchor, constant: 80),
-            nameLabel.heightAnchor.constraint(equalToConstant: 50),
-            nameLabel.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
-            nameLabel.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
+            nameAndIdLabel.topAnchor.constraint(equalTo: viewContainer.topAnchor, constant: 80),
+            nameAndIdLabel.heightAnchor.constraint(equalToConstant: 70),
+            nameAndIdLabel.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
+            nameAndIdLabel.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
             
-            typesCollectionView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
+            typesCollectionView.topAnchor.constraint(equalTo: nameAndIdLabel.bottomAnchor, constant: 10),
             typesCollectionView.heightAnchor.constraint(equalToConstant: 50),
             typesCollectionView.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
             typesCollectionView.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),

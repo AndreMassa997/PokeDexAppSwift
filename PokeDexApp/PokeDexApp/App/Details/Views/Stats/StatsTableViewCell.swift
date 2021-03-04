@@ -43,8 +43,8 @@ class StatsTableViewCell: UITableViewCell {
             //stat name constraint
             statNameLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
             statNameLabel.widthAnchor.constraint(equalToConstant: 40),
+            statNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             statNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            statNameLabel.heightAnchor.constraint(equalToConstant: 16),
             
             //value label constraint
             valueLabel.leftAnchor.constraint(equalTo: statNameLabel.rightAnchor),
@@ -56,7 +56,7 @@ class StatsTableViewCell: UITableViewCell {
             progressBar.leftAnchor.constraint(equalTo: valueLabel.rightAnchor, constant: 10),
             progressBar.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
             progressBar.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            progressBar.heightAnchor.constraint(equalToConstant: 10),
+            progressBar.heightAnchor.constraint(equalToConstant: 5),
         ])
         
         contentView.backgroundColor = .white
@@ -66,6 +66,8 @@ class StatsTableViewCell: UITableViewCell {
     //MARK: PUBLIC METHODS
     //Pokemon stat configuration
     public func configureStatCell(statViewModel: StatViewModel){
+        self.contentView.autoresizingMask = .flexibleHeight
+        self.autoresizingMask = .flexibleHeight
         self.addSubviews()
         self.setupLayout()
         

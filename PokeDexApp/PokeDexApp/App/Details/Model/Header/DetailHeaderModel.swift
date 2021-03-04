@@ -10,6 +10,7 @@ import UIKit
 struct DetailHeaderModel {
     let name: String
     let types: [Type]?
+    let id: Int
 }
 
 struct CarouselModel{
