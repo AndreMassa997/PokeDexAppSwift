@@ -29,9 +29,13 @@ final class DetailsCoordinator: Coordinator{
         navigationController.pushViewController(detailsViewController, animated: true)
     }
     
-    //Call on viewDidDisappear to deallocate coordinator instance
+    //Call when user did tap on back button
     func dismissDetails(){
         navigationController.popViewController(animated: true)
+    }
+    
+    //Call on viewDidDisappear to deallocate coordinator instance
+    func viewDidDisappear(){
         parentCoordinator?.removeCoordinator(self)
     }
     

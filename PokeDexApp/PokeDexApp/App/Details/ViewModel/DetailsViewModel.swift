@@ -26,7 +26,7 @@ enum CellViewModel{
 }
 
 final class DetailsViewModel{
-    let coordinator: DetailsCoordinator
+    private let coordinator: DetailsCoordinator
     
     //data for header (carousel images, name, color and types)
     let headerViewModel: DetailsHeaderViewModel
@@ -74,6 +74,10 @@ final class DetailsViewModel{
     //MARK: PUBLIC METHODS
     func onBackTapped(){
         coordinator.dismissDetails()
+    }
+    
+    func viewDidDisappear(){
+        coordinator.viewDidDisappear()
     }
     
     deinit {

@@ -80,16 +80,18 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let mainViewModel = mainViewModel else { return }
-        let initalPokemonsNumber = mainViewModel.pokemons.count
-        if initalPokemonsNumber > 0, indexPath.item == initalPokemonsNumber - 1{
-            mainViewModel.getPokemons(offset: mainViewModel.nextOffset, onSuccess: {
-                var indexPaths: [IndexPath] = []
-                let newPokemonsNumber = mainViewModel.pokemons.count - initalPokemonsNumber
-                for i in 0..<newPokemonsNumber{
-                    indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
-                }
-                collectionView.insertItems(at: indexPaths)
-            })
+        if !mainViewModel.isSearching{
+            let initalPokemonsNumber = mainViewModel.pokemons.count
+            if initalPokemonsNumber > 0, indexPath.item == initalPokemonsNumber - 1{
+                mainViewModel.getPokemons(offset: mainViewModel.nextOffset, onSuccess: {
+                    var indexPaths: [IndexPath] = []
+                    let newPokemonsNumber = mainViewModel.pokemons.count - initalPokemonsNumber
+                    for i in 0..<newPokemonsNumber{
+                        indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
+                    }
+                    collectionView.insertItems(at: indexPaths)
+                })
+            }
         }
     }
     
@@ -103,8 +105,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                         }, onError: {
                             
                         })
-                }, onFinishSearch: {
-                    
+                }, onFinishSearch: { [weak self] in
+                    self?.mainViewModel?.getAllSavedPokemon()
+                    self?.collectionView.reloadData()
                 })
                 return header
             }

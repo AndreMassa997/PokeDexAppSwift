@@ -47,6 +47,11 @@ class DetailsViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(changeOrientation), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        detailsViewModel?.viewDidDisappear()
+    }
+    
     //MARK: -PRIVATE METHODS
     @objc private func changeOrientation(){
         self.setBackgroundGradient()

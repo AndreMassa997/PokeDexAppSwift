@@ -103,6 +103,13 @@ final class MainCoordinator: Coordinator{
         }
     }
     
+    func getAllSavedPokemons() -> [PokemonCellViewModel]{
+        let allPokemons: [PokemonCellViewModel] = self.pokemons.compactMap { pokemon in
+            PokemonCellViewModel(pokemonModel: pokemon)
+        }
+        return allPokemons
+    }
+    
     
     
     
