@@ -98,7 +98,9 @@ final class MainCoordinator: Coordinator{
                 onSuccess?(pokemonModel)
             }
         }, onError: {
-            onError?()
+            DispatchQueue.main.async {
+                onError?()
+            }
         })
     }
 }

@@ -9,7 +9,6 @@ import UIKit
 
 class MainViewController: UIViewController {
     private var mainViewModel: MainViewModel?
-    private var offset: Int = 0
     private weak var footerLoaderView: LoaderCollectionReusableView?
     
     private let collectionView: UICollectionView = {
@@ -28,7 +27,7 @@ class MainViewController: UIViewController {
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(LoaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: LoaderCollectionReusableView.reusableId)
-        collectionView.register(SearchCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SearchCollectionReusableView.reusableId)
+        collectionView.register(HeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderCollectionReusableView.reusableId)
         collectionView.register(PokemonCollectionViewCell.self, forCellWithReuseIdentifier: PokemonCollectionViewCell.reusableId)
         return collectionView
     }()
@@ -44,7 +43,7 @@ class MainViewController: UIViewController {
         self.setupLayout()
         
         //get the first list of pokemons
-        mainViewModel?.getPokemons(offset: offset){ [weak self] in
+        mainViewModel?.getPokemons(){ [weak self] in
             self?.collectionView.reloadData()
         }
     }
@@ -61,6 +60,13 @@ class MainViewController: UIViewController {
             collectionView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor)
         ])
+    }
+    
+    private func showAlert(with title: String, message: String){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -83,7 +89,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         if !mainViewModel.isSearching{
             let initalPokemonsNumber = mainViewModel.pokemonCells.count
             if initalPokemonsNumber > 0, indexPath.item == initalPokemonsNumber - 1{
-                mainViewModel.getPokemons(offset: mainViewModel.nextOffset, onSuccess: {
+                mainViewModel.getPokemons(onSuccess: {
                     var indexPaths: [IndexPath] = []
                     let newPokemonsNumber = mainViewModel.pokemonCells.count - initalPokemonsNumber
                     for i in 0..<newPokemonsNumber{
@@ -97,13 +103,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader{
-            if let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SearchCollectionReusableView.reusableId, for: indexPath) as? SearchCollectionReusableView{
+            if let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderCollectionReusableView.reusableId, for: indexPath) as? HeaderCollectionReusableView{
                 header.configSearchBar(
                     onSearch: { [weak self] searchedText in
                         self?.mainViewModel?.searchPokemon(text: searchedText, onSuccess: {
                             self?.collectionView.reloadData()
-                        }, onError: {
-                            
+                        }, onError: { [weak self] in
+                            self?.showAlert(with: "Sorry!", message: "Pokemons not found on server or locally")
                         })
                 }, onFinishSearch: { [weak self] in
                     self?.mainViewModel?.didFinishSearching()
@@ -115,6 +121,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             if let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LoaderCollectionReusableView.reusableId, for: indexPath) as? LoaderCollectionReusableView{
                 footer.configLoader()
                 self.footerLoaderView = footer
+                if self.mainViewModel?.isSearching ?? false{
+                    footer.stopAnimate()
+                }
                 return footer
             }
         }
@@ -134,6 +143,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        CGSize(width: collectionView.frame.size.width, height: 60)
+        CGSize(width: collectionView.frame.size.width, height: 150)
     }
 }

@@ -7,8 +7,17 @@
 
 import UIKit
 
-class SearchCollectionReusableView: UICollectionReusableView{
-    static let reusableId = "SearchCollectionReusableView"
+class HeaderCollectionReusableView: UICollectionReusableView{
+    static let reusableId = "HeaderCollectionReusableView"
+    
+    let imageLogo: UIImageView = {
+        let iv = UIImageView()
+        iv.image = UIImage(named: "logo")
+        iv.contentMode = .scaleAspectFit
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        return iv
+    }()
+    
     
     let searchBar : UISearchBar = {
         let searchBar = UISearchBar()
@@ -25,6 +34,7 @@ class SearchCollectionReusableView: UICollectionReusableView{
     //MARK: PUBLIC METHODS
     func configSearchBar(onSearch: ((_ text: String) -> Void)?, onFinishSearch: (() -> Void)?){
         self.addSubview(searchBar)
+        self.addSubview(imageLogo)
         self.setupLayout()
         self.searchBar.delegate = self
         self.onSearch = onSearch
@@ -34,15 +44,21 @@ class SearchCollectionReusableView: UICollectionReusableView{
     //MARK: PRIVATE METHODS
     private func setupLayout(){
         NSLayoutConstraint.activate([
-            searchBar.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageLogo.topAnchor.constraint(equalTo: topAnchor),
+            imageLogo.heightAnchor.constraint(equalToConstant: 100),
+            imageLogo.leftAnchor.constraint(equalTo: leftAnchor),
+            imageLogo.rightAnchor.constraint(equalTo: rightAnchor),
+            
+            searchBar.topAnchor.constraint(equalTo: imageLogo.bottomAnchor, constant: -5),
             searchBar.heightAnchor.constraint(equalToConstant: 50),
             searchBar.leftAnchor.constraint(equalTo: leftAnchor, constant: 30),
             searchBar.rightAnchor.constraint(equalTo: rightAnchor, constant: -30)
         ])
+        searchBar.layer.cornerRadius = 25
     }
 }
 
-extension SearchCollectionReusableView: UISearchBarDelegate{
+extension HeaderCollectionReusableView: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty{
             self.onFinishSearch?()

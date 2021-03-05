@@ -42,8 +42,4 @@ final class DetailsCoordinator: Coordinator{
     deinit {
         print("deinitilized DetailsCoordinator")
     }
-    
-    
-    
-    
 }

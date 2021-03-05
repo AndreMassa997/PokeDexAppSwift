@@ -12,7 +12,7 @@ final class MainViewModel{
     private(set) var pokemonCells: [PokemonCellViewModel] = []
     private var pokemons: [PokemonModel] = []
     private var pokemonFounded: PokemonModel?
-    private(set) var nextOffset: Int = 0
+    private var nextOffset: Int = 0
     private(set) var isSearching: Bool = false
     
     init(with coordinator: MainCoordinator){
@@ -20,8 +20,8 @@ final class MainViewModel{
     }
     
     //MARK: PUBLIC METHODS
-    func getPokemons(offset: Int, onSuccess: (() -> Void)?){
-        self.coordinator.getPokemons(offset: offset, onSuccess: { [weak self] mainModel, pokemons in
+    func getPokemons(onSuccess: (() -> Void)?){
+        self.coordinator.getPokemons(offset: nextOffset, onSuccess: { [weak self] mainModel, pokemons in
             self?.pokemons.append(contentsOf: pokemons)
             self?.pokemonCells.append(contentsOf: pokemons.map({
                 PokemonCellViewModel(pokemonModel: $0)
@@ -57,7 +57,7 @@ final class MainViewModel{
                 self?.pokemonFounded = pokemonModel
                 onSuccess?()
             }, onError: {
-
+                onError?()
             })
         }
     }
