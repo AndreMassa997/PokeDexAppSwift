@@ -9,7 +9,9 @@ import Foundation
 
 final class MainViewModel{
     private let coordinator: MainCoordinator
-    private(set) var pokemons: [PokemonCellViewModel] = []
+    private(set) var pokemonCells: [PokemonCellViewModel] = []
+    private var pokemons: [PokemonModel] = []
+    private var pokemonFounded: PokemonModel?
     private(set) var nextOffset: Int = 0
     private(set) var isSearching: Bool = false
     
@@ -17,9 +19,15 @@ final class MainViewModel{
         self.coordinator = coordinator
     }
     
-    public func getPokemons(offset: Int, onSuccess: (() -> Void)?){
+    //MARK: PUBLIC METHODS
+    func getPokemons(offset: Int, onSuccess: (() -> Void)?){
         self.coordinator.getPokemons(offset: offset, onSuccess: { [weak self] mainModel, pokemons in
             self?.pokemons.append(contentsOf: pokemons)
+            self?.pokemonCells.append(contentsOf: pokemons.map({
+                PokemonCellViewModel(pokemonModel: $0)
+            }))
+            self?.pokemonCells.sort(by: { $0.id < $1.id })
+            
             if let nextUrl = mainModel.next, let nextOffsetString = nextUrl.getQueryStringParameter(param: "offset"), let nextOffset = Int(nextOffsetString){
                 self?.nextOffset = nextOffset
             }
@@ -29,23 +37,53 @@ final class MainViewModel{
 
     //pokemon from list tapped
     func didSelectPokemon(pokemon: PokemonCellViewModel){
-        coordinator.showPokemonDetails(pokemon: pokemon)
+        if let pokemonModel = self.pokemons.first(where: { $0.id == pokemon.id }){
+            coordinator.showPokemonDetails(pokemonModel)
+        }else if let pokemonFounded = pokemonFounded, pokemonFounded.id == pokemon.id{
+            coordinator.showPokemonDetails(pokemonFounded)
+        }
     }
     
     func searchPokemon(text: String, onSuccess: (()->Void)?, onError: (()->Void)?){
-        coordinator.searchPokemonLocally(text: text, onSuccess: { [weak self] pokemons in
-            self?.isSearching = true
-            self?.pokemons = pokemons
+        self.isSearching = true
+        let filteredPokemons = self.searchPokemonsLocally(text: text)
+        if filteredPokemons.count > 0 {
+            self.pokemonCells = filteredPokemons
             onSuccess?()
-        }, onError: {
-            
-        })
+        }else{
+            self.coordinator.getPokemonFromServerByText(text: text, onSuccess: { [weak self] pokemonModel in
+                let pokemonCell = PokemonCellViewModel(pokemonModel: pokemonModel)
+                self?.pokemonCells = [pokemonCell]
+                self?.pokemonFounded = pokemonModel
+                onSuccess?()
+            }, onError: {
+
+            })
+        }
     }
     
-    func getAllSavedPokemon(){
-        self.pokemons = coordinator.getAllSavedPokemons()
+    func searchPokemonsLocally(text: String) -> [PokemonCellViewModel]{
+        self.pokemonCells.filter{ pokemonCell in
+            //search by id
+            if let id = Int(text){
+                return pokemonCell.id == id
+            }
+            //otherwise search by name
+            return pokemonCell.name.lowercased().contains(text.lowercased())
+        }
     }
     
+    func didFinishSearching(){
+        self.isSearching = false
+        self.pokemonFounded = nil
+        self.pokemonCells.removeAll()
+        self.setPokemonCellsWithStoredData()
+    }
     
-    
+    //MARK: PRIVATE METHODS
+    private func setPokemonCellsWithStoredData(){
+        self.pokemonCells = self.pokemons.map { pokemon in
+            PokemonCellViewModel(pokemonModel: pokemon)
+        }
+    }
 }

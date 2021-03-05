@@ -46,8 +46,6 @@ extension SearchCollectionReusableView: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty{
             self.onFinishSearch?()
-        }else{
-            self.onSearch?(searchText)
         }
     }
     

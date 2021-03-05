@@ -67,11 +67,11 @@ class MainViewController: UIViewController {
 //MARK: UICollectionViewDelegate, UICollectionViewDataSource
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        mainViewModel?.pokemons.count ?? 0
+        mainViewModel?.pokemonCells.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCollectionViewCell.reusableId, for: indexPath) as? PokemonCollectionViewCell, let pokemon = mainViewModel?.pokemons[indexPath.item]{
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCollectionViewCell.reusableId, for: indexPath) as? PokemonCollectionViewCell, let pokemon = mainViewModel?.pokemonCells[indexPath.item]{
             cell.configurePokemonCell(pokemonModel: pokemon)
             return cell
         }
@@ -81,11 +81,11 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let mainViewModel = mainViewModel else { return }
         if !mainViewModel.isSearching{
-            let initalPokemonsNumber = mainViewModel.pokemons.count
+            let initalPokemonsNumber = mainViewModel.pokemonCells.count
             if initalPokemonsNumber > 0, indexPath.item == initalPokemonsNumber - 1{
                 mainViewModel.getPokemons(offset: mainViewModel.nextOffset, onSuccess: {
                     var indexPaths: [IndexPath] = []
-                    let newPokemonsNumber = mainViewModel.pokemons.count - initalPokemonsNumber
+                    let newPokemonsNumber = mainViewModel.pokemonCells.count - initalPokemonsNumber
                     for i in 0..<newPokemonsNumber{
                         indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
                     }
@@ -106,7 +106,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                             
                         })
                 }, onFinishSearch: { [weak self] in
-                    self?.mainViewModel?.getAllSavedPokemon()
+                    self?.mainViewModel?.didFinishSearching()
                     self?.collectionView.reloadData()
                 })
                 return header
@@ -129,7 +129,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let pokemon = self.mainViewModel?.pokemons[indexPath.item] else { return }
+        guard let pokemon = self.mainViewModel?.pokemonCells[indexPath.item] else { return }
         self.mainViewModel?.didSelectPokemon(pokemon: pokemon)
     }
     

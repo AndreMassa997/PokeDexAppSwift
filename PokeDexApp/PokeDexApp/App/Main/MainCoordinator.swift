@@ -11,7 +11,6 @@ final class MainCoordinator: Coordinator{
     var childCoordinators: [Coordinator] = []
     var parentCoordinator: Coordinator?
     private let navigationController: UINavigationController
-    private var pokemons: [PokemonModel] = []
     
     init(navigationController: UINavigationController){
         self.navigationController = navigationController
@@ -29,90 +28,77 @@ final class MainCoordinator: Coordinator{
     }
     
     //pokemon from list tapped
-    func showPokemonDetails(pokemon: PokemonCellViewModel){
-        guard let pokemonModel = self.pokemons.first(where: { $0.id == pokemon.id }) else {
-            //TODO: SHOW ERROR POPUP
-            return
-        }
+    func showPokemonDetails(_ pokemonModel: PokemonModel){
         let detailsCooordinator = DetailsCoordinator(navigationController: self.navigationController, pokemonModel: pokemonModel)
         self.addCoordinator(detailsCooordinator)
         detailsCooordinator.parentCoordinator = self
         detailsCooordinator.start()
     }
     
-    func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonCellViewModel]) -> Void)?){
+    func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonModel]) -> Void)?){
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "offset", value: String(offset))
         ]
         PokeAPI.shared.get(path: "pokemon", queryParams: queryItems,
-                           onSuccess: { data in
+                           onSuccess: { [weak self] data in
                             do {
                                 let jsonDecoder = JSONDecoder()
                                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                                 let mainModel = try jsonDecoder.decode(MainModel.self, from: data)
                                 let group = DispatchGroup()
-                                var pokemons: [PokemonCellViewModel] = []
+                                var pokemons: [PokemonModel] = []
+                                
                                 mainModel.results?.forEach{ result in
                                     guard let name = result.name else { return }
+                                    
                                     group.enter()
-                                    PokeAPI.shared.get(path: "pokemon/\(name)", onSuccess: { [weak self] data in
-                                        do {
-                                            let jsonDecoder = JSONDecoder()
-                                            jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                                            let pokemonModel = try jsonDecoder.decode(PokemonModel.self, from: data)
-                                            self?.pokemons.append(pokemonModel)
-                                            pokemons.append(PokemonCellViewModel(pokemonModel: pokemonModel))
-                                            group.leave()
-                                        }
-                                        catch let error{
-                                            print(error)
-                                        }
-                                    }, onErrorHandled: {
+                                    self?.getPokemon(name, onSuccess: { pokemonModel in
+                                        pokemons.append(pokemonModel)
+                                        group.leave()
+                                    }, onError: {
                                         group.leave()
                                     })
+                                    
                                 }
-                                group.notify(queue: .main) { [weak self] in
-                                    self?.pokemons.sort(by: { $0.id < $1.id })
-                                    pokemons.sort(by: { $0.id < $1.id })
+                                group.notify(queue: .main) {
                                     onSuccess?(mainModel, pokemons)
                                 }
                             }
                             catch{
                                 
                             }
-                            }, onErrorHandled: {
+                           }, onErrorHandled: {
                             
-                            })
+                           })
     }
     
-    func searchPokemonLocally(text: String, onSuccess: ((_ pokemons: [PokemonCellViewModel]) -> Void)?, onError: (()->Void)?){
-        let filteredPokemons: [PokemonCellViewModel] = self.pokemons.compactMap{ pokemon in
-            //search by id
-            if let id = Int(text), pokemon.id == id{
-                return PokemonCellViewModel(pokemonModel: pokemon)
-            }else if pokemon.name.lowercased().contains(text.lowercased()){
-                //search by name
-                return PokemonCellViewModel(pokemonModel: pokemon)
+    private func getPokemon(_ nameOrId: String, onSuccess: ((_ pokemons: PokemonModel) -> Void)?, onError: (()-> Void)?){
+        PokeAPI.shared.get(path: "pokemon/\(nameOrId)", onSuccess: { data in
+            do {
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                let pokemonModel = try jsonDecoder.decode(PokemonModel.self, from: data)
+                onSuccess?(pokemonModel)
             }
-            return nil
-        }
-        if filteredPokemons.count > 0{
-            onSuccess?(filteredPokemons)
-        }else{
+            catch{
+                onError?()
+            }
+        }, onErrorHandled: {
             onError?()
-        }
+        })
     }
     
-    func getAllSavedPokemons() -> [PokemonCellViewModel]{
-        let allPokemons: [PokemonCellViewModel] = self.pokemons.compactMap { pokemon in
-            PokemonCellViewModel(pokemonModel: pokemon)
+    func getPokemonFromServerByText(text: String, onSuccess: ((_ pokemon: PokemonModel) -> Void)?, onError: (() -> Void)?){
+        var text = text.lowercased()
+        if let id = Int(text){  //the text is a number, transform it in int
+            text = "\(id)"
         }
-        return allPokemons
+        self.getPokemon(text, onSuccess: { pokemonModel in
+            DispatchQueue.main.async {
+                onSuccess?(pokemonModel)
+            }
+        }, onError: {
+            onError?()
+        })
     }
-    
-    
-    
-    
-    
-    
 }
