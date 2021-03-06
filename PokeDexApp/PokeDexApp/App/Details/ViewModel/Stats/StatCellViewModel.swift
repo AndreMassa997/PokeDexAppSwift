@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class StatViewModel{
+struct StatCellViewModel{
     let statName: String
     let statValue: Int
     let progressValue: Float

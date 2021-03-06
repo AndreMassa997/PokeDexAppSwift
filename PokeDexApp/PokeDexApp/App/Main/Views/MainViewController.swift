@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     private var mainViewModel: MainViewModel?
     private weak var footerLoaderView: LoaderCollectionReusableView?
     
@@ -15,6 +15,7 @@ class MainViewController: UIViewController {
         let itemSize: CGFloat = 150
         let edge: CGFloat = 20
         let inset = UIScreen.main.bounds.width.truncatingRemainder(dividingBy: itemSize + edge/2) / 2
+        //layout
         let collectionViewFlowLayout = UICollectionViewFlowLayout()
         collectionViewFlowLayout.scrollDirection = .vertical
         collectionViewFlowLayout.minimumInteritemSpacing = edge
@@ -22,10 +23,13 @@ class MainViewController: UIViewController {
         collectionViewFlowLayout.itemSize = CGSize(width: itemSize, height: itemSize)
         collectionViewFlowLayout.sectionInset = UIEdgeInsets(top: edge, left: inset, bottom: edge, right: inset)
         collectionViewFlowLayout.footerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 50)
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewFlowLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
+        
+        //register header, cell and footer
         collectionView.register(LoaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: LoaderCollectionReusableView.reusableId)
         collectionView.register(HeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderCollectionReusableView.reusableId)
         collectionView.register(PokemonCollectionViewCell.self, forCellWithReuseIdentifier: PokemonCollectionViewCell.reusableId)
@@ -35,11 +39,12 @@ class MainViewController: UIViewController {
     //MARK: PUBLIC METHODS
     public func configure(with viewModel: MainViewModel){
         self.view.backgroundColor = .white
+        self.view.addSubview(self.collectionView)
+
         collectionView.dataSource = self
         collectionView.delegate = self
         
         self.mainViewModel = viewModel
-        self.addViews()
         self.setupLayout()
         
         //get the first list of pokemons
@@ -49,10 +54,6 @@ class MainViewController: UIViewController {
     }
     
     //MARK: PRIVATE METHODS
-    private func addViews(){
-        self.view.addSubview(self.collectionView)
-    }
-    
     private func setupLayout(){
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
@@ -77,27 +78,24 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCollectionViewCell.reusableId, for: indexPath) as? PokemonCollectionViewCell, let pokemon = mainViewModel?.pokemonCells[indexPath.item]{
-            cell.configurePokemonCell(pokemonModel: pokemon)
-            return cell
-        }
-        return UICollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCollectionViewCell.reusableId, for: indexPath) as? PokemonCollectionViewCell, let pokemon = mainViewModel?.pokemonCells[indexPath.item] else { return UICollectionViewCell() }
+        cell.configurePokemonCell(pokemonModel: pokemon)
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let mainViewModel = mainViewModel else { return }
-        if !mainViewModel.isSearching{
-            let initalPokemonsNumber = mainViewModel.pokemonCells.count
-            if initalPokemonsNumber > 0, indexPath.item == initalPokemonsNumber - 1{
-                mainViewModel.getPokemons(onSuccess: {
-                    var indexPaths: [IndexPath] = []
-                    let newPokemonsNumber = mainViewModel.pokemonCells.count - initalPokemonsNumber
-                    for i in 0..<newPokemonsNumber{
-                        indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
-                    }
-                    collectionView.insertItems(at: indexPaths)
-                })
-            }
+        guard let mainViewModel = mainViewModel, !mainViewModel.isSearching else { return }
+        
+        let initalPokemonsNumber = mainViewModel.pokemonCells.count
+        if initalPokemonsNumber > 0, indexPath.item == initalPokemonsNumber - 1{
+            mainViewModel.getPokemons(onSuccess: {
+                var indexPaths: [IndexPath] = []
+                let newPokemonsNumber = mainViewModel.pokemonCells.count - initalPokemonsNumber
+                for i in 0..<newPokemonsNumber{
+                    indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
+                }
+                collectionView.insertItems(at: indexPaths)
+            })
         }
     }
     
@@ -119,7 +117,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             }
         }else{
             if let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LoaderCollectionReusableView.reusableId, for: indexPath) as? LoaderCollectionReusableView{
-                footer.configLoader()
+                footer.configLoaderAndSpin()
                 self.footerLoaderView = footer
                 if self.mainViewModel?.isSearching ?? false{
                     footer.stopAnimate()

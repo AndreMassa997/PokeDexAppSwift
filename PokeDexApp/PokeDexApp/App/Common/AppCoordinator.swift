@@ -32,7 +32,7 @@ final class AppCoordinator: Coordinator{
         self.window = window
     }
     
-    //Start the app from MainCoordinator and append in the childCoordinatorsList
+    //Start the app from MainCoordinator and append it in the childCoordinatorsList
     func start() {
         let navigationController = UINavigationController()
         let mainCoordinator = MainCoordinator(navigationController: navigationController)

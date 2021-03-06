@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailsViewController: UIViewController {
+final class DetailsViewController: UIViewController {
     private var detailsViewModel: DetailsViewModel?
     
     //MARK: -VIEWS DECLARATION
@@ -29,11 +29,19 @@ class DetailsViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
+        tableView.layer.cornerRadius = 40
+        tableView.clipsToBounds = true
+        
+        //register cells
         tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: StatsTableViewCell.reusableId)
-        tableView.register(LoaderTableViewCell.self, forCellReuseIdentifier: LoaderTableViewCell.reusableId)
         tableView.register(DimensionsTableViewCell.self, forCellReuseIdentifier: DimensionsTableViewCell.reusableId)
         return tableView
     }()
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        detailsViewModel?.viewDidDisappear()
+    }
     
     //MARK: -PUBLIC METHODS
     public func configureDetailView(with detailsViewModel: DetailsViewModel){
@@ -47,11 +55,6 @@ class DetailsViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(changeOrientation), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        detailsViewModel?.viewDidDisappear()
-    }
-    
     //MARK: -PRIVATE METHODS
     @objc private func changeOrientation(){
         self.setBackgroundGradient()
@@ -60,14 +63,6 @@ class DetailsViewController: UIViewController {
     
     @objc private func onBackTapped(sender: UIButton!){
         detailsViewModel?.onBackTapped()
-    }
-    
-    private func setupHeaderView(){
-        if let headerViewModel = detailsViewModel?.headerViewModel{
-            self.detailsHeaderView.configureHeader(detailHeaderViewModel: headerViewModel)
-            self.detailsHeaderView.frame = CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: detailsHeaderView.getHeaderHeight())
-            self.tableView.tableHeaderView = self.detailsHeaderView
-        }
     }
     
     private func addSubviews(){
@@ -85,13 +80,22 @@ class DetailsViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             tableView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
             tableView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
         self.setBackgroundGradient()
         self.setupHeaderView()
     }
     
-    //makes background gradient
+    //setup the header
+    private func setupHeaderView(){
+        guard let headerViewModel = detailsViewModel?.headerViewModel else { return }
+        
+        self.detailsHeaderView.configureHeader(detailHeaderViewModel: headerViewModel)
+        self.detailsHeaderView.frame = CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: detailsHeaderView.getHeaderHeight())
+        self.tableView.tableHeaderView = self.detailsHeaderView
+    }
+    
+    //make background gradient
     private func setBackgroundGradient(){
         if let mainColor = detailsViewModel?.mainColor, let endColor = detailsViewModel?.endColor{
             let gradient = CAGradientLayer()
@@ -115,44 +119,43 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let section = self.detailsViewModel?.sectionViewModels[section]{
-            switch section {
-            case .dimensions(let items), .stats(let items), .abilities(let items):
-                return items.count
-            }
+        guard let section = self.detailsViewModel?.sectionViewModels[section] else { return 0 }
+        switch section {
+        case .dimensions(let items), .stats(let items), .abilities(let items):
+            return items.count
         }
-        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let item = self.detailsViewModel?.sectionViewModels[indexPath]{
-            switch item {
-            case .dimensions(let dimensionsViewModel):
-                if let cell = tableView.dequeueReusableCell(withIdentifier: DimensionsTableViewCell.reusableId) as? DimensionsTableViewCell{
-                    cell.configureCell(dimensionsViewModel: dimensionsViewModel)
-                    return cell
-                }
-            case .stat(let statViewModel):
-                if let cell = tableView.dequeueReusableCell(withIdentifier: StatsTableViewCell.reusableId) as? StatsTableViewCell{
-                    cell.configureStatCell(statViewModel: statViewModel)
-                    return cell
-                }
-            case .ability(let abilityViewModel):
-                let cell = UITableViewCell()
-                let label = UILabel(frame: CGRect(x: 40, y: 0, width: tableView.frame.width-80, height: cell.frame.height))
-                label.text = abilityViewModel.abilityName.capitalized
-                label.textColor = abilityViewModel.mainColor
-                label.font = UIFont.systemFont(ofSize: 18, weight: .light)
-                cell.addSubview(label)
-                let separatorView = UIView(frame: CGRect(x: 30, y: cell.frame.height-1, width: tableView.frame.width-60, height: 1))
-                separatorView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-                if indexPath.row != (tableView.numberOfRows(inSection: indexPath.section)-1){
-                    cell.addSubview(separatorView)
-                }
+        guard let item = self.detailsViewModel?.sectionViewModels[indexPath] else { return  UITableViewCell() }
+        
+        switch item {
+        case .dimensions(let dimensionsViewModel):
+            if let cell = tableView.dequeueReusableCell(withIdentifier: DimensionsTableViewCell.reusableId) as? DimensionsTableViewCell{
+                cell.configureCell(dimensionsViewModel: dimensionsViewModel)
                 return cell
             }
+        case .stat(let statViewModel):
+            if let cell = tableView.dequeueReusableCell(withIdentifier: StatsTableViewCell.reusableId) as? StatsTableViewCell{
+                cell.configureStatCell(statViewModel: statViewModel)
+                return cell
+            }
+        case .ability(let abilityViewModel):
+            let cell = UITableViewCell()
+            let label = UILabel(frame: CGRect(x: 40, y: 0, width: tableView.frame.width-80, height: cell.frame.height))
+            label.text = abilityViewModel.abilityName.capitalized
+            label.textColor = abilityViewModel.mainColor
+            label.font = UIFont.systemFont(ofSize: 18, weight: .light)
+            cell.addSubview(label)
+            let separatorView = UIView(frame: CGRect(x: 30, y: cell.frame.height-1, width: tableView.frame.width-60, height: 1))
+            separatorView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+            if indexPath.row != (tableView.numberOfRows(inSection: indexPath.section)-1){
+                cell.addSubview(separatorView)
+            }
+            return cell
         }
-        return UITableViewCell()
+        
+        return  UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

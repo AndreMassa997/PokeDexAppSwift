@@ -20,9 +20,9 @@ enum DetailsSectionViewModel{
 }
 
 enum CellViewModel{
-    case stat(statViewModel: StatViewModel)
-    case dimensions(dimensionsViewModel: DimensionsViewModel)
-    case ability(abilityViewModel: AbilityViewModel)
+    case stat(statViewModel: StatCellViewModel)
+    case dimensions(dimensionsViewModel: DimensionsCellViewModel)
+    case ability(abilityViewModel: AbilityCellViewModel)
 }
 
 final class DetailsViewModel{
@@ -56,17 +56,17 @@ final class DetailsViewModel{
         let mainColor = pokemonModel.types?.first?.type.name.mainColor ?? .clear
         
         //append height and weight
-        self.sectionViewModels.append(.dimensions(items: [CellViewModel.dimensions(dimensionsViewModel: DimensionsViewModel(height: pokemonModel.height ?? 0, weight: pokemonModel.weight ?? 0, mainColor: mainColor))]))
+        self.sectionViewModels.append(.dimensions(items: [CellViewModel.dimensions(dimensionsViewModel: DimensionsCellViewModel(height: pokemonModel.height ?? 0, weight: pokemonModel.weight ?? 0, mainColor: mainColor))]))
         
         //append stats into stats section
         self.sectionViewModels.append(.stats(items:
                                                 pokemonModel.stats?.compactMap{ stat in
-                                                    CellViewModel.stat(statViewModel: StatViewModel(stats: stat, mainColor: mainColor))
+                                                    CellViewModel.stat(statViewModel: StatCellViewModel(stats: stat, mainColor: mainColor))
                                                 } ?? []))
         
         //append abilities that are not hidden into abilities section
         self.sectionViewModels.append(.abilities(items: pokemonModel.abilities?.compactMap({ ability in
-            CellViewModel.ability(abilityViewModel: AbilityViewModel(ability: ability, mainColor: mainColor))
+            CellViewModel.ability(abilityViewModel: AbilityCellViewModel(ability: ability, mainColor: mainColor))
         }) ?? []))
         
     }

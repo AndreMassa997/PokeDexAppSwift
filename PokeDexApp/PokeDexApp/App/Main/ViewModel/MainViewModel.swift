@@ -44,6 +44,7 @@ final class MainViewModel{
         }
     }
     
+    //search pokemon by text, first locally, if no results were founded, call poke api
     func searchPokemon(text: String, onSuccess: (()->Void)?, onError: (()->Void)?){
         self.isSearching = true
         let filteredPokemons = self.searchPokemonsLocally(text: text)
@@ -51,13 +52,22 @@ final class MainViewModel{
             self.pokemonCells = filteredPokemons
             onSuccess?()
         }else{
-            self.coordinator.getPokemonFromServerByText(text: text, onSuccess: { [weak self] pokemonModel in
+            var text = text.lowercased()
+            if let id = Int(text){  //the text is a number, transform it in int
+                text = "\(id)"
+            }
+            //get the pokemon from server by name or id
+            self.coordinator.getPokemon(text, onSuccess: { [weak self] pokemonModel in
                 let pokemonCell = PokemonCellViewModel(pokemonModel: pokemonModel)
                 self?.pokemonCells = [pokemonCell]
                 self?.pokemonFounded = pokemonModel
-                onSuccess?()
+                DispatchQueue.main.async {
+                    onSuccess?()
+                }
             }, onError: {
-                onError?()
+                DispatchQueue.main.async {
+                    onError?()
+                }
             })
         }
     }

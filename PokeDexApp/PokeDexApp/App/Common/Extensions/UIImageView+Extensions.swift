@@ -1,27 +1,11 @@
 //
-//  Extensions.swift
+//  UIImageView+Extensions.swift
 //  PokeDexApp
 //
-//  Created by Andrea Massari on 26/02/21.
+//  Created by Andrea Massari on 06/03/21.
 //
 
 import UIKit
-
-extension UIView{
-    func roundCorners(_ corners: UIRectCorner, bounds: CGRect, radius: CGFloat) {
-        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        let mask = CAShapeLayer()
-        mask.path = path.cgPath
-        self.layer.mask = mask
-    }
-}
-
-extension URL{
-    func getQueryStringParameter(param: String) -> String? {
-      guard let urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false) else { return nil }
-      return urlComponents.queryItems?.first(where: { $0.name == param })?.value
-    }
-}
 
 extension UIImageView{
     func downloadFromUrl(from url: URL?, contentMode mode: UIView.ContentMode = .scaleAspectFit) {
@@ -53,4 +37,3 @@ extension UIImageView{
             
     }
 }
-

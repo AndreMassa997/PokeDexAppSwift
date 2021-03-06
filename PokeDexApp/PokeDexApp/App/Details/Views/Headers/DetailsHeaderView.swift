@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailsHeaderView: UITableViewHeaderFooterView{
+final class DetailsHeaderView: UITableViewHeaderFooterView{
     static let reuseId = "DetailsHeaderView"
     private var detailsHeaderViewModel: DetailsHeaderViewModel?
     
@@ -52,7 +52,8 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         
         self.imageCarouselView.configureCarousel(carouselViewModel: detailHeaderViewModel.carouselViewModel)
         
-        let mutableAttributedString = NSMutableAttributedString(string: detailHeaderViewModel.getPokemonName().capitalized, attributes: [
+        //pokemon name and id strings
+        let mutableAttributedString = NSMutableAttributedString(string: detailHeaderViewModel.name.capitalized, attributes: [
             .font: UIFont.systemFont(ofSize: 30, weight: .light)
         ])
         let idString = NSAttributedString(string: "\n#\(detailHeaderViewModel.getPokemonId())", attributes: [
@@ -61,6 +62,7 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
         mutableAttributedString.append(idString)
         
         self.nameAndIdLabel.attributedText = mutableAttributedString
+        
         typesCollectionView.delegate = self
         typesCollectionView.dataSource = self
         
@@ -104,6 +106,7 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
             typesCollectionView.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
             typesCollectionView.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
         ])
+        
         self.layoutIfNeeded()
         self.setupCornerRadius()
         self.typesCollectionView.collectionViewLayout.invalidateLayout()
@@ -121,15 +124,13 @@ class DetailsHeaderView: UITableViewHeaderFooterView{
 //types chips collection view
 extension DetailsHeaderView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        self.detailsHeaderViewModel?.getTypes()?.count ?? 0
+        self.detailsHeaderViewModel?.types?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TypeCollectionViewCell.reusableId, for: indexPath) as? TypeCollectionViewCell, let pokemonType = self.detailsHeaderViewModel?.getTypes()?[indexPath.item].name{
-            cell.configureCell(type: pokemonType)
-            return cell
-        }
-        return UICollectionViewCell()
+        guard let  cell = collectionView.dequeueReusableCell(withReuseIdentifier: TypeCollectionViewCell.reusableId, for: indexPath) as? TypeCollectionViewCell, let pokemonType = self.detailsHeaderViewModel?.types?[indexPath.item].name else { return UICollectionViewCell() }
+        cell.configureCell(type: pokemonType)
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView,

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HeaderCollectionReusableView: UICollectionReusableView{
+final class HeaderCollectionReusableView: UICollectionReusableView{
     static let reusableId = "HeaderCollectionReusableView"
     
     let imageLogo: UIImageView = {
@@ -17,7 +17,6 @@ class HeaderCollectionReusableView: UICollectionReusableView{
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
-    
     
     let searchBar : UISearchBar = {
         let searchBar = UISearchBar()
@@ -54,7 +53,6 @@ class HeaderCollectionReusableView: UICollectionReusableView{
             searchBar.leftAnchor.constraint(equalTo: leftAnchor, constant: 30),
             searchBar.rightAnchor.constraint(equalTo: rightAnchor, constant: -30)
         ])
-        searchBar.layer.cornerRadius = 25
     }
 }
 

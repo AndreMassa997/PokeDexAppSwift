@@ -35,6 +35,7 @@ final class MainCoordinator: Coordinator{
         detailsCooordinator.start()
     }
     
+    //get list of pokemons from server (paging)
     func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonModel]) -> Void)?){
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "offset", value: String(offset))
@@ -71,8 +72,9 @@ final class MainCoordinator: Coordinator{
                             
                            })
     }
-    
-    private func getPokemon(_ nameOrId: String, onSuccess: ((_ pokemons: PokemonModel) -> Void)?, onError: (()-> Void)?){
+        
+    //get pokemon with name or id
+    func getPokemon(_ nameOrId: String, onSuccess: ((_ pokemons: PokemonModel) -> Void)?, onError: (()-> Void)?){
         PokeAPI.shared.get(path: "pokemon/\(nameOrId)", onSuccess: { data in
             do {
                 let jsonDecoder = JSONDecoder()
@@ -85,22 +87,6 @@ final class MainCoordinator: Coordinator{
             }
         }, onErrorHandled: {
             onError?()
-        })
-    }
-    
-    func getPokemonFromServerByText(text: String, onSuccess: ((_ pokemon: PokemonModel) -> Void)?, onError: (() -> Void)?){
-        var text = text.lowercased()
-        if let id = Int(text){  //the text is a number, transform it in int
-            text = "\(id)"
-        }
-        self.getPokemon(text, onSuccess: { pokemonModel in
-            DispatchQueue.main.async {
-                onSuccess?(pokemonModel)
-            }
-        }, onError: {
-            DispatchQueue.main.async {
-                onError?()
-            }
         })
     }
 }

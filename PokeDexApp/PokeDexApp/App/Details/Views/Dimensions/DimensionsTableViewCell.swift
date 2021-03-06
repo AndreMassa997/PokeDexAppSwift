@@ -27,6 +27,8 @@ final class DimensionsTableViewCell: UITableViewCell{
         return label
     }()
     
+    let weightProgressBar: UIProgressView = UIProgressView()
+    
     let heightTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .thin)
@@ -44,6 +46,8 @@ final class DimensionsTableViewCell: UITableViewCell{
         return label
     }()
     
+    let heightProgressBar: UIProgressView = UIProgressView()
+    
     let separatorView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
@@ -51,7 +55,7 @@ final class DimensionsTableViewCell: UITableViewCell{
         return view
     }()
     
-    let leftStackView: UIStackView = {
+    let weightStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -60,7 +64,7 @@ final class DimensionsTableViewCell: UITableViewCell{
         return stackView
     }()
     
-    let rightStackView: UIStackView = {
+    let heightStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -69,21 +73,18 @@ final class DimensionsTableViewCell: UITableViewCell{
         return stackView
     }()
     
-    let weightProgressBar: UIProgressView = UIProgressView()
-    let heightProgressBar: UIProgressView = UIProgressView()
- 
     
     //MARK: PRIVATE METHODS
-    //Add subviews to the contentView
+    //Add subviews to the contentView and to the stackViews
     private func addSubviews(){
-        leftStackView.addArrangedSubview(weightTitleLabel)
-        leftStackView.addArrangedSubview(weightLabel)
-        leftStackView.addArrangedSubview(weightProgressBar)
-        rightStackView.addArrangedSubview(heightTitleLabel)
-        rightStackView.addArrangedSubview(heightLabel)
-        rightStackView.addArrangedSubview(heightProgressBar)
-        self.contentView.addSubview(leftStackView)
-        self.contentView.addSubview(rightStackView)
+        weightStackView.addArrangedSubview(weightTitleLabel)
+        weightStackView.addArrangedSubview(weightLabel)
+        weightStackView.addArrangedSubview(weightProgressBar)
+        heightStackView.addArrangedSubview(heightTitleLabel)
+        heightStackView.addArrangedSubview(heightLabel)
+        heightStackView.addArrangedSubview(heightProgressBar)
+        self.contentView.addSubview(weightStackView)
+        self.contentView.addSubview(heightStackView)
         self.contentView.addSubview(separatorView)
     }
     
@@ -98,15 +99,15 @@ final class DimensionsTableViewCell: UITableViewCell{
             separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             separatorView.widthAnchor.constraint(equalToConstant: 1),
             
-            leftStackView.rightAnchor.constraint(equalTo: separatorView.leftAnchor, constant: -30),
-            leftStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
-            leftStackView.heightAnchor.constraint(equalToConstant: 80),
-            leftStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            weightStackView.rightAnchor.constraint(equalTo: separatorView.leftAnchor, constant: -30),
+            weightStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
+            weightStackView.heightAnchor.constraint(equalToConstant: 80),
+            weightStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            rightStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
-            rightStackView.leftAnchor.constraint(equalTo: separatorView.rightAnchor, constant: 30),
-            rightStackView.heightAnchor.constraint(equalToConstant: 80),
-            rightStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            heightStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
+            heightStackView.leftAnchor.constraint(equalTo: separatorView.rightAnchor, constant: 30),
+            heightStackView.heightAnchor.constraint(equalToConstant: 80),
+            heightStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
         contentView.backgroundColor = .white
     }
@@ -114,7 +115,7 @@ final class DimensionsTableViewCell: UITableViewCell{
     
     
     //MARK: PUBLIC METHODS
-    func configureCell(dimensionsViewModel: DimensionsViewModel){
+    func configureCell(dimensionsViewModel: DimensionsCellViewModel){
         self.contentView.autoresizingMask = .flexibleHeight
         self.autoresizingMask = .flexibleHeight
         self.addSubviews()

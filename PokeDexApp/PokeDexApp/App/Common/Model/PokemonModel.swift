@@ -5,7 +5,6 @@
 //  Created by Andrea Massari on 25/02/21.
 //
 
-import Foundation
 import UIKit
 
 // MARK: - PokemonModel
@@ -34,6 +33,7 @@ struct Result: Decodable{
     let name: String
 }
 
+//Pokemon Images
 // MARK: - Sprites
 struct Sprites: Decodable {
     let backDefault: URL?
@@ -49,19 +49,11 @@ struct Sprites: Decodable {
 
 // MARK: - Other
 struct Other: Decodable {
-    let dreamWorld: DreamWorld?
     let officialArtwork: OfficialArtwork?
 
     enum CodingKeys: String, CodingKey {
-        case dreamWorld = "dreamWorld"
         case officialArtwork = "official-artwork"
     }
-}
-
-// MARK: - DreamWorld
-struct DreamWorld: Decodable {
-    let frontDefault: URL?
-    let frontFemale: URL?
 }
 
 // MARK: - OfficialArtwork
@@ -69,6 +61,7 @@ struct OfficialArtwork: Decodable {
     let frontDefault: URL?
 }
 
+//Pokemon Stats
 // MARK: - Stats
 struct Stats: Decodable {
     let baseStat: Int?
@@ -79,7 +72,6 @@ struct Stats: Decodable {
 // MARK: - Stat
 struct Stat: Decodable {
     let name: StatName
-    let url: URL
 }
 
 enum StatName: String, Decodable{
@@ -128,14 +120,12 @@ enum StatName: String, Decodable{
 
 // MARK: - TypeElement
 struct TypeElement: Decodable {
-    let slot: Int
     let type: Type
 }
 
 // MARK: - Type
 struct Type: Decodable {
     let name: PokemonType
-    let url: URL
 }
 
 //get all types from: https://pokeapi.co/api/v2/type
@@ -252,7 +242,8 @@ enum PokemonType: String, Decodable {
         }
     }
     
-    func getImage() -> UIImage?{
+    var image: UIImage?{
         UIImage(named: rawValue)
     }
+    
 }

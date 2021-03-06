@@ -7,6 +7,7 @@
 
 import Foundation
 
+//Pokemons API Model
 // MARK: - MainModel
 struct MainModel: Decodable {
     let count: Int

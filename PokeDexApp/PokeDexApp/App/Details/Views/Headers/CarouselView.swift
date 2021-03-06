@@ -8,8 +8,7 @@
 import UIKit
 
 final class CarouselView: UIView{
-    
-    private weak var carouselViewModel: CarouselViewModel?
+    private var carouselViewModel: CarouselViewModel?
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -19,11 +18,12 @@ final class CarouselView: UIView{
         layout.itemSize = CGSize(width: 200, height: 200)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(CarouselImageCollectionViewCell.self, forCellWithReuseIdentifier: CarouselImageCollectionViewCell.reuseId)
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPagingEnabled = true
         collectionView.allowsSelection = false
+        //register cell
+        collectionView.register(CarouselImageCollectionViewCell.self, forCellWithReuseIdentifier: CarouselImageCollectionViewCell.reuseId)
         return collectionView
     }()
     
@@ -39,8 +39,8 @@ final class CarouselView: UIView{
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         self.carouselViewModel = carouselViewModel
-        pageControl.numberOfPages = carouselViewModel.getUrls().count
-        pageControl.pageIndicatorTintColor = carouselViewModel.getMainColor()
+        pageControl.numberOfPages = carouselViewModel.urls.count
+        pageControl.pageIndicatorTintColor = carouselViewModel.mainColor
         self.addSubviews()
         self.setupLayout()
     }
@@ -69,19 +69,18 @@ final class CarouselView: UIView{
 
 extension CarouselView: UICollectionViewDelegate, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        carouselViewModel?.getUrls().count ?? 0
+        carouselViewModel?.urls.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CarouselImageCollectionViewCell.reuseId, for: indexPath) as? CarouselImageCollectionViewCell, let url = carouselViewModel?.getUrls()[indexPath.item]{
-            cell.config(url: url)
-            return cell
-        }
-        return UICollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CarouselImageCollectionViewCell.reuseId, for: indexPath) as? CarouselImageCollectionViewCell, let url = carouselViewModel?.urls[indexPath.item] else { return UICollectionViewCell() }
+        cell.config(url: url)
+        return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        self.pageControl.currentPage = indexPath.item
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let item = Int(ceil(scrollView.contentOffset.x/scrollView.bounds.size.width))
+        self.pageControl.currentPage = item
     }
 }
 

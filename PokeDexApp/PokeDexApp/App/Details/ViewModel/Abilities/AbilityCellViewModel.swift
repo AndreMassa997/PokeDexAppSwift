@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class AbilityViewModel{
+struct AbilityCellViewModel{
     let abilityName: String
     let mainColor: UIColor
     

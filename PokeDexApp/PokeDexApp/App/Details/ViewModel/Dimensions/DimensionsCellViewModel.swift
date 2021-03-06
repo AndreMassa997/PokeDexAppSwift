@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class DimensionsViewModel{
+struct DimensionsCellViewModel{
     let weight: Float
     let height: Float
     let mainColor: UIColor

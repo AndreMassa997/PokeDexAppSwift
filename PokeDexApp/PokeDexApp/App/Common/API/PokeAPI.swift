@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PokeAPI{
+final class PokeAPI{
     static let shared: PokeAPI = PokeAPI()
     
     //200 MB cache memory + 200 MB for images
@@ -27,7 +27,7 @@ class PokeAPI{
             return
         }
         
-        //Build the request
+        //Build the get request
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

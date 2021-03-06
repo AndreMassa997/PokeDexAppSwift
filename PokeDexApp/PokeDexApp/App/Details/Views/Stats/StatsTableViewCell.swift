@@ -7,7 +7,7 @@
 
 import UIKit
 
-class StatsTableViewCell: UITableViewCell {
+final class StatsTableViewCell: UITableViewCell {
     static let reusableId = "StatsTableViewCell"
     
     private let statNameLabel: UILabel = {
@@ -63,7 +63,7 @@ class StatsTableViewCell: UITableViewCell {
     
     //MARK: PUBLIC METHODS
     //Pokemon stat configuration
-    public func configureStatCell(statViewModel: StatViewModel){
+    public func configureStatCell(statViewModel: StatCellViewModel){
         self.contentView.autoresizingMask = .flexibleHeight
         self.autoresizingMask = .flexibleHeight
         self.addSubviews()

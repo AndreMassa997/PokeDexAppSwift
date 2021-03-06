@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PokemonCollectionViewCell: UICollectionViewCell{
+final class PokemonCollectionViewCell: UICollectionViewCell{
     static let reusableId = "PokemonCollectionViewCell"
     private let imageHeight: CGFloat = 100
     
