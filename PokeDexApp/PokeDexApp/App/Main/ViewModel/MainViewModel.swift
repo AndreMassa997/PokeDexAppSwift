@@ -20,7 +20,7 @@ final class MainViewModel{
     }
     
     //MARK: PUBLIC METHODS
-    func getPokemons(onSuccess: (() -> Void)?){
+    func getPokemons(onSuccess: (() -> Void)?, onError: (()-> Void)?){
         self.coordinator.getPokemons(offset: nextOffset, onSuccess: { [weak self] mainModel, pokemons in
             self?.pokemons.append(contentsOf: pokemons)
             self?.pokemonCells.append(contentsOf: pokemons.map({
@@ -32,6 +32,8 @@ final class MainViewModel{
                 self?.nextOffset = nextOffset
             }
             onSuccess?()
+        }, onError: {
+            onError?()
         })
     }
 

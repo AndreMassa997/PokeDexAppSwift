@@ -14,14 +14,12 @@ final class MainViewController: UIViewController {
     private let collectionView: UICollectionView = {
         let itemSize: CGFloat = 150
         let edge: CGFloat = 20
-        let inset = UIScreen.main.bounds.width.truncatingRemainder(dividingBy: itemSize + edge/2) / 2
         //layout
         let collectionViewFlowLayout = UICollectionViewFlowLayout()
         collectionViewFlowLayout.scrollDirection = .vertical
         collectionViewFlowLayout.minimumInteritemSpacing = edge
         collectionViewFlowLayout.minimumLineSpacing = edge
         collectionViewFlowLayout.itemSize = CGSize(width: itemSize, height: itemSize)
-        collectionViewFlowLayout.sectionInset = UIEdgeInsets(top: edge, left: inset, bottom: edge, right: inset)
         collectionViewFlowLayout.footerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 50)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewFlowLayout)
@@ -48,12 +46,22 @@ final class MainViewController: UIViewController {
         self.setupLayout()
         
         //get the first list of pokemons
-        mainViewModel?.getPokemons(){ [weak self] in
+        mainViewModel?.getPokemons(onSuccess: { [weak self] in
             self?.collectionView.reloadData()
-        }
+        },
+        onError: { [weak self] in
+            self?.showAlert(with: "Network error", message: "Unable to load pokemons")
+        })
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(changeOrientation), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     //MARK: PRIVATE METHODS
+    @objc private func changeOrientation(){
+        //recalculate layout on orientation changes
+        self.collectionView.collectionViewLayout.invalidateLayout()
+    }
+    
     private func setupLayout(){
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
@@ -83,27 +91,12 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let mainViewModel = mainViewModel, !mainViewModel.isSearching else { return }
-        
-        let initalPokemonsNumber = mainViewModel.pokemonCells.count
-        if initalPokemonsNumber > 0, indexPath.item == initalPokemonsNumber - 1{
-            mainViewModel.getPokemons(onSuccess: {
-                var indexPaths: [IndexPath] = []
-                let newPokemonsNumber = mainViewModel.pokemonCells.count - initalPokemonsNumber
-                for i in 0..<newPokemonsNumber{
-                    indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
-                }
-                collectionView.insertItems(at: indexPaths)
-            })
-        }
-    }
-    
+    //header with logo and searchbar, footer with loader
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader{
             if let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderCollectionReusableView.reusableId, for: indexPath) as? HeaderCollectionReusableView{
                 header.configSearchBar(
-                    onSearch: { [weak self] searchedText in
+                    onBeginSearch: { [weak self] searchedText in
                         self?.mainViewModel?.searchPokemon(text: searchedText, onSuccess: {
                             self?.collectionView.reloadData()
                         }, onError: { [weak self] in
@@ -116,23 +109,33 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 return header
             }
         }else{
-            if let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LoaderCollectionReusableView.reusableId, for: indexPath) as? LoaderCollectionReusableView{
+            if let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LoaderCollectionReusableView.reusableId, for: indexPath) as? LoaderCollectionReusableView, let mainViewModel = self.mainViewModel{
                 footer.configLoaderAndSpin()
                 self.footerLoaderView = footer
                 if self.mainViewModel?.isSearching ?? false{
                     footer.stopAnimate()
+                }else{
+                    //load other pokemons
+                    let initalPokemonsNumber = mainViewModel.pokemonCells.count
+                    let lastIndexPathItem = collectionView.numberOfItems(inSection: 0)-1
+                    if initalPokemonsNumber > 0, lastIndexPathItem == initalPokemonsNumber - 1{
+                        mainViewModel.getPokemons(onSuccess: {
+                            var indexPaths: [IndexPath] = []
+                            let newPokemonsNumber = mainViewModel.pokemonCells.count - initalPokemonsNumber
+                            for i in 0..<newPokemonsNumber{
+                                indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
+                            }
+                            collectionView.insertItems(at: indexPaths)
+                        }, onError:{ [weak self] in
+                            self?.showAlert(with: "Network error", message: "Unable to load pokemons")
+                            footer.stopAnimate()
+                        })
+                    }
                 }
                 return footer
             }
         }
         return UICollectionReusableView()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
-        if elementKind == UICollectionView.elementKindSectionFooter{
-            self.footerLoaderView?.stopAnimate()
-            self.footerLoaderView = nil
-        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -143,4 +146,12 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         CGSize(width: collectionView.frame.size.width, height: 150)
     }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                         layout collectionViewLayout: UICollectionViewLayout,
+                         insetForSectionAt section: Int) -> UIEdgeInsets{
+        let inset = UIScreen.main.bounds.width.truncatingRemainder(dividingBy: 150 + 20/2) / 2
+        return UIEdgeInsets(top: 20, left: inset, bottom: 20, right: inset)
+    }
+    
 }

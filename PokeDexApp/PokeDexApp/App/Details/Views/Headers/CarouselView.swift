@@ -64,6 +64,7 @@ final class CarouselView: UIView{
             pageControl.rightAnchor.constraint(equalTo: self.rightAnchor),
             pageControl.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
+        pageControl.isHidden = pageControl.numberOfPages < 2
     }
 }
 
@@ -95,7 +96,7 @@ final class CarouselImageCollectionViewCell: UICollectionViewCell{
     }()
     
     func config(url: URL) {
-        imageView.downloadFromUrl(from: url)
+        imageView.downloadFromUrl(from: url, putPlaceholder: true)
         contentView.addSubview(imageView)
         setupLayout()
     }

@@ -8,8 +8,13 @@
 import UIKit
 
 extension UIImageView{
-    func downloadFromUrl(from url: URL?, contentMode mode: UIView.ContentMode = .scaleAspectFit) {
-        guard let url = url else { return }
+    func downloadFromUrl(from url: URL?, contentMode mode: UIView.ContentMode = .scaleAspectFit, putPlaceholder: Bool = false) {
+        guard let url = url else {
+            if putPlaceholder{
+                self.image = UIImage(named: "placeholder")
+            }
+            return
+        }
         let cacheMemoryImages = URLCache(memoryCapacity: 0, diskCapacity: 200*1024*1024, diskPath: "PokeDexImagesCache")
         
         contentMode = mode
@@ -27,13 +32,19 @@ extension UIImageView{
                     let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
                     let data = data, error == nil,
                     let image = UIImage(data: data)
-                    else { return }
+                else {
+                    DispatchQueue.main.async() { [weak self] in
+                        if putPlaceholder{
+                            self?.image = UIImage(named: "placeholder")
+                        }
+                    }
+                    return
+                }
                 DispatchQueue.main.async() { [weak self] in
                     cacheMemoryImages.storeCachedResponse(CachedURLResponse(response: httpURLResponse, data: data), for: URLRequest(url: url))
                     self?.image = image
                 }
             }.resume()
         }
-            
     }
 }

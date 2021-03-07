@@ -13,7 +13,7 @@ final class PokeAPI{
     //200 MB cache memory + 200 MB for images
     private let cacheMemory = URLCache(memoryCapacity: 0, diskCapacity: 200*1024*1024, diskPath: "PokeDexAPICache")
     
-    func get(path: String, queryParams: [URLQueryItem]? = nil, saveResponseOnCache: Bool = true, onSuccess: ((Data) -> Void)?, onErrorHandled: (() -> Void)?){
+    func get(path: String, queryParams: [URLQueryItem]? = nil, saveResponseOnCache: Bool = true, onSuccess: ((Data) -> Void)?, onError: (() -> Void)?){
         
         //build the URL
         var components = URLComponents()
@@ -47,22 +47,22 @@ final class PokeAPI{
             URLSession(configuration: sessionConfiguration).dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
                 if let error = error {
                     print("Network error: " + error.localizedDescription)
-                    onErrorHandled?()
+                    onError?()
                     return
                 }
                 guard let response = response as? HTTPURLResponse else {
                     print("Response invalid")
-                    onErrorHandled?()
+                    onError?()
                     return
                 }
                 guard response.statusCode == 200 else {
                     print("Status code not valid: \(response.statusCode)")
-                    onErrorHandled?()
+                    onError?()
                     return
                 }
                 guard let data = data else {
                     print("No data")
-                    onErrorHandled?()
+                    onError?()
                     return
                 }
                 

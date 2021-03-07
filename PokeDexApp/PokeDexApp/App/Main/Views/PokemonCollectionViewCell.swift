@@ -102,7 +102,7 @@ final class PokemonCollectionViewCell: UICollectionViewCell{
         self.addSubviews()
         self.setupLayout()
         
-        self.image.downloadFromUrl(from: pokemonModel.imageURL, contentMode: .scaleAspectFit)
+        self.image.downloadFromUrl(from: pokemonModel.imageURL, contentMode: .scaleAspectFit, putPlaceholder: true)
         self.nameLabel.text = pokemonModel.name.capitalized
         self.idLabel.text = "#"+pokemonModel.getPokemonId()
         self.view.backgroundColor = pokemonModel.type?.mainColor

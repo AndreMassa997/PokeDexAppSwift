@@ -36,7 +36,7 @@ final class MainCoordinator: Coordinator{
     }
     
     //get list of pokemons from server (paging)
-    func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonModel]) -> Void)?){
+    func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonModel]) -> Void)?, onError:(() -> Void)?){
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "offset", value: String(offset))
         ]
@@ -66,10 +66,14 @@ final class MainCoordinator: Coordinator{
                                 }
                             }
                             catch{
-                                
+                                DispatchQueue.main.async {
+                                    onError?()
+                                }
                             }
-                           }, onErrorHandled: {
-                            
+                           }, onError: {
+                            DispatchQueue.main.async {
+                                onError?()
+                            }
                            })
     }
         
@@ -85,7 +89,7 @@ final class MainCoordinator: Coordinator{
             catch{
                 onError?()
             }
-        }, onErrorHandled: {
+        }, onError: {
             onError?()
         })
     }

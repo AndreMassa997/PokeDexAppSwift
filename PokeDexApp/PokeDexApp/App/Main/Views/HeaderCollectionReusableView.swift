@@ -27,16 +27,16 @@ final class HeaderCollectionReusableView: UICollectionReusableView{
         return searchBar
     }()
     
-    var onSearch: ((_ text: String)->Void)?
+    var onBeginSearch: ((_ text: String)->Void)?
     var onFinishSearch: (()->Void)?
     
     //MARK: PUBLIC METHODS
-    func configSearchBar(onSearch: ((_ text: String) -> Void)?, onFinishSearch: (() -> Void)?){
+    func configSearchBar(onBeginSearch: ((_ text: String) -> Void)?, onFinishSearch: (() -> Void)?){
         self.addSubview(searchBar)
         self.addSubview(imageLogo)
         self.setupLayout()
         self.searchBar.delegate = self
-        self.onSearch = onSearch
+        self.onBeginSearch = onBeginSearch
         self.onFinishSearch = onFinishSearch
     }
     
@@ -64,6 +64,6 @@ extension HeaderCollectionReusableView: UISearchBarDelegate{
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.onSearch?(searchBar.text ?? "")
+        self.onBeginSearch?(searchBar.text ?? "")
     }
 }
