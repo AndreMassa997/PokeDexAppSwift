@@ -110,10 +110,6 @@ final class DetailsViewController: UIViewController {
             self.view.layer.insertSublayer(gradient, at: 0)
         }
     }
-    
-    deinit {
-        print("deinitialized DetailsViewController")
-    }
 }
 
 //MARK: -TABLE VIEW DELEGATE, DATA SOURCE

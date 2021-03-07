@@ -12,7 +12,7 @@ final class MainViewModel{
     private(set) var pokemonCells: [PokemonCellViewModel] = []
     private var pokemons: [PokemonModel] = []
     private var pokemonFounded: PokemonModel?
-    private var nextOffset: Int = 0
+    private(set) var nextOffset: Int = 0
     private(set) var isSearching: Bool = false
     
     init(with coordinator: MainCoordinator){
@@ -74,17 +74,6 @@ final class MainViewModel{
         }
     }
     
-    func searchPokemonsLocally(text: String) -> [PokemonCellViewModel]{
-        self.pokemonCells.filter{ pokemonCell in
-            //search by id
-            if let id = Int(text){
-                return pokemonCell.id == id
-            }
-            //otherwise search by name
-            return pokemonCell.name.lowercased().contains(text.lowercased())
-        }
-    }
-    
     func didFinishSearching(){
         self.isSearching = false
         self.pokemonFounded = nil
@@ -96,6 +85,17 @@ final class MainViewModel{
     private func setPokemonCellsWithStoredData(){
         self.pokemonCells = self.pokemons.map { pokemon in
             PokemonCellViewModel(pokemonModel: pokemon)
+        }
+    }
+    
+    private func searchPokemonsLocally(text: String) -> [PokemonCellViewModel]{
+        self.pokemonCells.filter{ pokemonCell in
+            //search by id
+            if let id = Int(text){
+                return pokemonCell.id == id
+            }
+            //otherwise search by name
+            return pokemonCell.name.lowercased().contains(text.lowercased())
         }
     }
 }

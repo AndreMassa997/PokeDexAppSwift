@@ -8,7 +8,7 @@
 import Foundation
 
 //Data for single pokemon cell
-struct PokemonCellViewModel{
+struct PokemonCellViewModel: Equatable{
     let name: String
     let type: PokemonType?
     let imageURL: URL?
