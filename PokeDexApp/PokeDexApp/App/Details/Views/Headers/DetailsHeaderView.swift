@@ -29,21 +29,6 @@ final class DetailsHeaderView: UITableViewHeaderFooterView{
         return label
     }()
     
-    private let typesCollectionView: UICollectionView = {
-        let collectionViewFlowLayout = UICollectionViewFlowLayout()
-        collectionViewFlowLayout.minimumInteritemSpacing = 10
-        collectionViewFlowLayout.minimumLineSpacing = 0
-        collectionViewFlowLayout.itemSize = CGSize(width: 110, height: 30)
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewFlowLayout)
-        collectionView.backgroundColor = .clear
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(TypeCollectionViewCell.self, forCellWithReuseIdentifier: TypeCollectionViewCell.reusableId)
-        collectionView.allowsSelection = false
-        return collectionView
-    }()
-    
     //MARK: -PUBLIC METHODS
     func configureHeader(detailHeaderViewModel: DetailsHeaderViewModel){
         self.detailsHeaderViewModel = detailHeaderViewModel
@@ -63,9 +48,6 @@ final class DetailsHeaderView: UITableViewHeaderFooterView{
         
         self.nameAndIdLabel.attributedText = mutableAttributedString
         
-        typesCollectionView.delegate = self
-        typesCollectionView.dataSource = self
-        
         self.addSubviews()
         self.setupLayout()
     }
@@ -77,7 +59,6 @@ final class DetailsHeaderView: UITableViewHeaderFooterView{
     //MARK: -PRIVATE METHODS
     private func addSubviews(){
         self.viewContainer.addSubview(nameAndIdLabel)
-        self.viewContainer.addSubview(typesCollectionView)
         self.contentView.addSubview(viewContainer)
         self.contentView.addSubview(imageCarouselView)
     }
@@ -92,7 +73,7 @@ final class DetailsHeaderView: UITableViewHeaderFooterView{
             imageCarouselView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             
             viewContainer.topAnchor.constraint(equalTo: imageCarouselView.bottomAnchor, constant: -80),
-            viewContainer.heightAnchor.constraint(equalToConstant: 220),
+            viewContainer.heightAnchor.constraint(equalToConstant: 150),
             viewContainer.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             viewContainer.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             
@@ -100,16 +81,10 @@ final class DetailsHeaderView: UITableViewHeaderFooterView{
             nameAndIdLabel.heightAnchor.constraint(equalToConstant: 70),
             nameAndIdLabel.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
             nameAndIdLabel.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
-            
-            typesCollectionView.topAnchor.constraint(equalTo: nameAndIdLabel.bottomAnchor, constant: 10),
-            typesCollectionView.heightAnchor.constraint(equalToConstant: 50),
-            typesCollectionView.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
-            typesCollectionView.rightAnchor.constraint(equalTo: viewContainer.rightAnchor),
         ])
         
         self.layoutIfNeeded()
         self.setupCornerRadius()
-        self.typesCollectionView.collectionViewLayout.invalidateLayout()
     }
     
     private func setupCornerRadius(){
@@ -117,28 +92,5 @@ final class DetailsHeaderView: UITableViewHeaderFooterView{
         let viewWidth: CGFloat = UIScreen.main.bounds.width - (UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0) - (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0)
         let bounds = CGRect(x: 0, y: 0, width: viewWidth, height: self.viewContainer.frame.height)
         self.viewContainer.roundCorners([.topLeft, .topRight], bounds: bounds, radius: 40)
-    }
-}
-
-//MARK: -COLLECTION VIEW DELEGATE, DATASOURCE, LAYOUT
-//types chips collection view
-extension DetailsHeaderView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        self.detailsHeaderViewModel?.types?.count ?? 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let  cell = collectionView.dequeueReusableCell(withReuseIdentifier: TypeCollectionViewCell.reusableId, for: indexPath) as? TypeCollectionViewCell, let pokemonType = self.detailsHeaderViewModel?.types?[indexPath.item].name else { return UICollectionViewCell() }
-        cell.configureCell(type: pokemonType)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                         layout collectionViewLayout: UICollectionViewLayout,
-                         insetForSectionAt section: Int) -> UIEdgeInsets{
-        let totalCellWidth: CGFloat = 110 * CGFloat(collectionView.numberOfItems(inSection: section))
-        let totalSpacingWidth = 10 * CGFloat(collectionView.numberOfItems(inSection: section) - 1)
-        let leftRightInsets = (collectionView.safeAreaLayoutGuide.layoutFrame.width - (totalCellWidth + totalSpacingWidth))/2
-        return UIEdgeInsets(top: 10, left: leftRightInsets, bottom: 10, right: leftRightInsets)
     }
 }

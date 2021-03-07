@@ -8,6 +8,7 @@
 import UIKit
 
 enum DetailsSectionViewModel{
+    case types(items: [CellViewModel])
     case dimensions(items: [CellViewModel])
     case stats(items: [CellViewModel])
     case abilities(items: [CellViewModel])
@@ -20,6 +21,7 @@ enum DetailsSectionViewModel{
 }
 
 enum CellViewModel{
+    case types(items: TypesCellViewModel)
     case stat(statViewModel: StatCellViewModel)
     case dimensions(dimensionsViewModel: DimensionsCellViewModel)
     case ability(abilityViewModel: AbilityCellViewModel)
@@ -28,7 +30,7 @@ enum CellViewModel{
 final class DetailsViewModel{
     private let coordinator: DetailsCoordinator
     
-    //data for header (carousel images, name, color and types)
+    //data for header (carousel images, name, color)
     let headerViewModel: DetailsHeaderViewModel
     
     //data for tableView (sections with description, stats)
@@ -54,6 +56,13 @@ final class DetailsViewModel{
     private func setupDataSource(pokemonModel: PokemonModel){
         //MARK: append datas available from Pokemon model
         let mainColor = pokemonModel.types?.first?.type.name.mainColor ?? .clear
+        
+        //append types if present
+        if let types = pokemonModel.types?.compactMap({ $0.type }){
+            self.sectionViewModels.append(.types(items: [
+                CellViewModel.types(items: TypesCellViewModel(types: types))
+            ]))
+        }
         
         //append height and weight
         self.sectionViewModels.append(.dimensions(items: [CellViewModel.dimensions(dimensionsViewModel: DimensionsCellViewModel(height: pokemonModel.height ?? 0, weight: pokemonModel.weight ?? 0, mainColor: mainColor))]))
@@ -90,7 +99,7 @@ extension Array where Element == DetailsSectionViewModel {
     subscript(indexPath: IndexPath) -> CellViewModel? {
         let section = self[indexPath.section]
         switch section {
-        case .stats(let items), .dimensions(let items), .abilities(let items):
+        case .types(let items), .stats(let items), .dimensions(let items), .abilities(let items):
             return items[indexPath.row]
         }
     }

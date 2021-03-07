@@ -33,6 +33,7 @@ final class DetailsViewController: UIViewController {
         tableView.clipsToBounds = true
         
         //register cells
+        tableView.register(TypesTableViewCell.self, forCellReuseIdentifier: TypesTableViewCell.reusableId)
         tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: StatsTableViewCell.reusableId)
         tableView.register(DimensionsTableViewCell.self, forCellReuseIdentifier: DimensionsTableViewCell.reusableId)
         return tableView
@@ -51,16 +52,19 @@ final class DetailsViewController: UIViewController {
         
         self.addSubviews()
         self.setupLayout()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(changeOrientation), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    //handle rotation to set gradient and header
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: nil) { [weak self]
+            _ in
+            self?.setBackgroundGradient()
+            self?.setupHeaderView()
+        }
     }
     
     //MARK: -PRIVATE METHODS
-    @objc private func changeOrientation(){
-        self.setBackgroundGradient()
-        self.setupHeaderView()
-    }
-    
     @objc private func onBackTapped(sender: UIButton!){
         detailsViewModel?.onBackTapped()
     }
@@ -121,7 +125,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let section = self.detailsViewModel?.sectionViewModels[section] else { return 0 }
         switch section {
-        case .dimensions(let items), .stats(let items), .abilities(let items):
+        case .types(let items), .dimensions(let items), .stats(let items), .abilities(let items):
             return items.count
         }
     }
@@ -130,6 +134,11 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
         guard let item = self.detailsViewModel?.sectionViewModels[indexPath] else { return  UITableViewCell() }
         
         switch item {
+        case .types(let typesViewModel):
+            if let cell = tableView.dequeueReusableCell(withIdentifier: TypesTableViewCell.reusableId) as? TypesTableViewCell{
+                cell.configureCell(typesViewModel: typesViewModel)
+                return cell
+            }
         case .dimensions(let dimensionsViewModel):
             if let cell = tableView.dequeueReusableCell(withIdentifier: DimensionsTableViewCell.reusableId) as? DimensionsTableViewCell{
                 cell.configureCell(dimensionsViewModel: dimensionsViewModel)
@@ -159,6 +168,10 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        //return no header if section is types section
+        if section == 0 {
+            return nil
+        }
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
         label.backgroundColor = .white
         label.font = UIFont.systemFont(ofSize: 20, weight: .thin)
@@ -169,6 +182,6 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        40
+        section == 0 ? 0 : 40
     }
 }

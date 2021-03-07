@@ -11,13 +11,9 @@ struct DetailsHeaderViewModel{
     let carouselViewModel: CarouselViewModel
     
     let name: String
-    let types: [Type]?
     let id: Int
    
     init(pokemonModel: PokemonModel){
-        self.types = pokemonModel.types?.compactMap{ type in
-            type.type
-        }
         self.name = pokemonModel.name
         self.id = pokemonModel.id
         

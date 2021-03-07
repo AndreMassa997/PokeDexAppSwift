@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E39D2FD25F5224A007C4611 /* TypesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E39D2FC25F5224A007C4611 /* TypesTableViewCell.swift */; };
 		3E43FC2025ED6D65001FCE2C /* PokemonCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E43FC1F25ED6D65001FCE2C /* PokemonCellViewModel.swift */; };
 		3E55392E25E81D1A0093214A /* PokeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55392D25E81D1A0093214A /* PokeAPI.swift */; };
 		3E55393125E81D250093214A /* DetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55393025E81D250093214A /* DetailsCoordinator.swift */; };
@@ -24,6 +25,7 @@
 		3E817DE225EEB3A6003036E5 /* AbilityCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E817DE125EEB3A6003036E5 /* AbilityCellViewModel.swift */; };
 		3E821AEF25E9097500BB991A /* PokemonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E821AEE25E9097500BB991A /* PokemonCollectionViewCell.swift */; };
 		3E821AF425E90AE900BB991A /* PokemonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55392425E801880093214A /* PokemonModel.swift */; };
+		3E9001A425F5209D0077AC2D /* TypesCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9001A325F5209D0077AC2D /* TypesCellViewModel.swift */; };
 		3EA3C82825E7A71200CBFEE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA3C82725E7A71200CBFEE7 /* AppDelegate.swift */; };
 		3EA3C83125E7A71300CBFEE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA3C83025E7A71300CBFEE7 /* Assets.xcassets */; };
 		3EA3C83425E7A71300CBFEE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA3C83225E7A71300CBFEE7 /* LaunchScreen.storyboard */; };
@@ -39,6 +41,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3E39D2FC25F5224A007C4611 /* TypesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypesTableViewCell.swift; sourceTree = "<group>"; };
 		3E43FC1F25ED6D65001FCE2C /* PokemonCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonCellViewModel.swift; sourceTree = "<group>"; };
 		3E55392425E801880093214A /* PokemonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonModel.swift; sourceTree = "<group>"; };
 		3E55392D25E81D1A0093214A /* PokeAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokeAPI.swift; sourceTree = "<group>"; };
@@ -56,6 +59,7 @@
 		3E7CC0B825E7E6FC00823793 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		3E817DE125EEB3A6003036E5 /* AbilityCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbilityCellViewModel.swift; sourceTree = "<group>"; };
 		3E821AEE25E9097500BB991A /* PokemonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonCollectionViewCell.swift; sourceTree = "<group>"; };
+		3E9001A325F5209D0077AC2D /* TypesCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypesCellViewModel.swift; sourceTree = "<group>"; };
 		3EA3C82425E7A71200CBFEE7 /* PokeDexApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PokeDexApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA3C82725E7A71200CBFEE7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3EA3C83025E7A71300CBFEE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -83,6 +87,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3E39D2FB25F5222E007C4611 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				3E39D2FC25F5224A007C4611 /* TypesTableViewCell.swift */,
+			);
+			path = Types;
+			sourceTree = "<group>";
+		};
 		3E55390D25E7EB720093214A /* Details */ = {
 			isa = PBXGroup;
 			children = (
@@ -97,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				3E55393325E81D300093214A /* DetailsViewModel.swift */,
+				3E90019E25F5205C0077AC2D /* Types */,
 				3E62412B25EBBA11001A8671 /* Header */,
 				3EAE3AE725F021E400B4BD5C /* Dimensions */,
 				3EAE73FF25ED1ADB0040153F /* Stats */,
@@ -110,6 +123,7 @@
 			children = (
 				3E55393625E81D360093214A /* DetailsViewController.swift */,
 				3E62412625EBB6C8001A8671 /* Headers */,
+				3E39D2FB25F5222E007C4611 /* Types */,
 				3EAE3AED25F0260F00B4BD5C /* Dimensions */,
 				3EAE73FE25ED1ACC0040153F /* Stats */,
 			);
@@ -216,6 +230,14 @@
 				3E817DE125EEB3A6003036E5 /* AbilityCellViewModel.swift */,
 			);
 			path = Abilities;
+			sourceTree = "<group>";
+		};
+		3E90019E25F5205C0077AC2D /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				3E9001A325F5209D0077AC2D /* TypesCellViewModel.swift */,
+			);
+			path = Types;
 			sourceTree = "<group>";
 		};
 		3EA3C81B25E7A71200CBFEE7 = {
@@ -366,6 +388,7 @@
 				3E55393725E81D360093214A /* DetailsViewController.swift in Sources */,
 				3EAE3AF325F0264500B4BD5C /* DimensionsTableViewCell.swift in Sources */,
 				3E821AEF25E9097500BB991A /* PokemonCollectionViewCell.swift in Sources */,
+				3E39D2FD25F5224A007C4611 /* TypesTableViewCell.swift in Sources */,
 				3EAE73FC25ECF7910040153F /* StatCellViewModel.swift in Sources */,
 				3E7CC0B125E7E35800823793 /* MainCoordinator.swift in Sources */,
 				3E55393425E81D300093214A /* DetailsViewModel.swift in Sources */,
@@ -377,6 +400,7 @@
 				3EAE3AE925F0221000B4BD5C /* DimensionsCellViewModel.swift in Sources */,
 				3E62411F25EBB116001A8671 /* DetailsHeaderView.swift in Sources */,
 				3E62412925EBB72E001A8671 /* TypeCollectionViewCell.swift in Sources */,
+				3E9001A425F5209D0077AC2D /* TypesCellViewModel.swift in Sources */,
 				3ED5812725F3DFF70020D5FC /* LoaderCollectionReusableView.swift in Sources */,
 				3E55393125E81D250093214A /* DetailsCoordinator.swift in Sources */,
 				3EA3C82825E7A71200CBFEE7 /* AppDelegate.swift in Sources */,
