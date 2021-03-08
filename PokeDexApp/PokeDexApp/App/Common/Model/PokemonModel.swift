@@ -99,6 +99,7 @@ enum StatName: String, Decodable{
         }
     }
     
+    //max values are available from https://www.serebii.net/pokedex-swsh/stat/sp-attack.shtml
     var maxValue: Float{
         switch self {
         case .hp:
