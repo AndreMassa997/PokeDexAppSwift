@@ -40,10 +40,8 @@ final class PokeAPI{
         
         if let cachedData = cacheMemory.cachedResponse(for: request)?.data{
             //if data are cached, means that are good
-            print("Retrieve cached data for: \(request)")
             onSuccess?(cachedData)
         }else{
-            print("Call service: \(request)")
             URLSession(configuration: sessionConfiguration).dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
                 if let error = error {
                     print("Network error: " + error.localizedDescription)

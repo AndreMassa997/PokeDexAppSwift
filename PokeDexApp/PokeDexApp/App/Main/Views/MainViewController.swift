@@ -127,7 +127,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                             }
                             collectionView.insertItems(at: indexPaths)
                         }, onError:{ [weak self] in
-                            self?.showAlert(with: "Network error", message: "Unable to load pokemons")
+                            self?.showAlert(with: "Sorry!", message: "Unable to load pokemons")
                             footer.stopAnimate()
                         })
                     }
