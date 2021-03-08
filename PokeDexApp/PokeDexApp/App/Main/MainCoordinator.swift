@@ -78,7 +78,7 @@ class MainCoordinator: Coordinator{
     }
         
     //get pokemon with name or id
-    func getPokemon(_ nameOrId: String, onSuccess: ((_ pokemons: PokemonModel) -> Void)?, onError: (()-> Void)?){
+    func getPokemon(_ nameOrId: String, onSuccess: ((_ pokemon: PokemonModel) -> Void)?, onError: (()-> Void)?){
         PokeAPI.shared.get(path: "pokemon/\(nameOrId)", onSuccess: { data in
             do {
                 let jsonDecoder = JSONDecoder()

@@ -21,8 +21,10 @@ final class TypesTableViewCell: UITableViewCell{
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(TypeCollectionViewCell.self, forCellWithReuseIdentifier: TypeCollectionViewCell.reusableId)
         collectionView.allowsSelection = false
+        
+        //register cell
+        collectionView.register(TypeCollectionViewCell.self, forCellWithReuseIdentifier: TypeCollectionViewCell.reusableId)
         return collectionView
     }()
     

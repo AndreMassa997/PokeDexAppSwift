@@ -15,6 +15,7 @@ extension UIImageView{
             }
             return
         }
+        //200 MB Images cache
         let cacheMemoryImages = URLCache(memoryCapacity: 0, diskCapacity: 200*1024*1024, diskPath: "PokeDexImagesCache")
         
         contentMode = mode

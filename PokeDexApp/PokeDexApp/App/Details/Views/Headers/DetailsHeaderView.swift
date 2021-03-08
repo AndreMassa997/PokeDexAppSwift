@@ -11,7 +11,7 @@ final class DetailsHeaderView: UITableViewHeaderFooterView{
     static let reuseId = "DetailsHeaderView"
     private var detailsHeaderViewModel: DetailsHeaderViewModel?
     
-    //MARK: -VIEWS DECLARATION
+    //MARK: -DECLARATIONS
     private let imageCarouselView = CarouselView()
     
     private let viewContainer: UIView = {

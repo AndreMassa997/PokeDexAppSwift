@@ -113,6 +113,7 @@
 		3E39D2FB25F5222E007C4611 /* Types */ = {
 			isa = PBXGroup;
 			children = (
+				3E62412825EBB72E001A8671 /* TypeCollectionViewCell.swift */,
 				3E39D2FC25F5224A007C4611 /* TypesTableViewCell.swift */,
 			);
 			path = Types;
@@ -193,7 +194,6 @@
 			children = (
 				3EC412DD25EBE4F70080C328 /* CarouselView.swift */,
 				3E62411E25EBB116001A8671 /* DetailsHeaderView.swift */,
-				3E62412825EBB72E001A8671 /* TypeCollectionViewCell.swift */,
 			);
 			path = Headers;
 			sourceTree = "<group>";
