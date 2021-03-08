@@ -133,11 +133,11 @@
 			isa = PBXGroup;
 			children = (
 				3E55393325E81D300093214A /* DetailsViewModel.swift */,
-				3E90019E25F5205C0077AC2D /* Types */,
-				3E62412B25EBBA11001A8671 /* Header */,
-				3EAE3AE725F021E400B4BD5C /* Dimensions */,
-				3EAE73FF25ED1ADB0040153F /* Stats */,
-				3E817DDF25EEB384003036E5 /* Abilities */,
+				3E62412C25EBBA3D001A8671 /* DetailsHeaderViewModel.swift */,
+				3E9001A325F5209D0077AC2D /* TypesCellViewModel.swift */,
+				3EAE3AE825F0221000B4BD5C /* DimensionsCellViewModel.swift */,
+				3EAE73FB25ECF7910040153F /* StatCellViewModel.swift */,
+				3E817DE125EEB3A6003036E5 /* AbilityCellViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -198,14 +198,6 @@
 			path = Headers;
 			sourceTree = "<group>";
 		};
-		3E62412B25EBBA11001A8671 /* Header */ = {
-			isa = PBXGroup;
-			children = (
-				3E62412C25EBBA3D001A8671 /* DetailsHeaderViewModel.swift */,
-			);
-			path = Header;
-			sourceTree = "<group>";
-		};
 		3E7CC0A925E7E12400823793 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -257,22 +249,6 @@
 			path = PokeDexAppTests;
 			sourceTree = "<group>";
 		};
-		3E817DDF25EEB384003036E5 /* Abilities */ = {
-			isa = PBXGroup;
-			children = (
-				3E817DE125EEB3A6003036E5 /* AbilityCellViewModel.swift */,
-			);
-			path = Abilities;
-			sourceTree = "<group>";
-		};
-		3E90019E25F5205C0077AC2D /* Types */ = {
-			isa = PBXGroup;
-			children = (
-				3E9001A325F5209D0077AC2D /* TypesCellViewModel.swift */,
-			);
-			path = Types;
-			sourceTree = "<group>";
-		};
 		3EA3C81B25E7A71200CBFEE7 = {
 			isa = PBXGroup;
 			children = (
@@ -303,14 +279,6 @@
 			path = PokeDexApp;
 			sourceTree = "<group>";
 		};
-		3EAE3AE725F021E400B4BD5C /* Dimensions */ = {
-			isa = PBXGroup;
-			children = (
-				3EAE3AE825F0221000B4BD5C /* DimensionsCellViewModel.swift */,
-			);
-			path = Dimensions;
-			sourceTree = "<group>";
-		};
 		3EAE3AED25F0260F00B4BD5C /* Dimensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -323,14 +291,6 @@
 			isa = PBXGroup;
 			children = (
 				3EAE73F825ECF54B0040153F /* StatsTableViewCell.swift */,
-			);
-			path = Stats;
-			sourceTree = "<group>";
-		};
-		3EAE73FF25ED1ADB0040153F /* Stats */ = {
-			isa = PBXGroup;
-			children = (
-				3EAE73FB25ECF7910040153F /* StatCellViewModel.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
