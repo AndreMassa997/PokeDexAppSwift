@@ -49,16 +49,16 @@ The UI (Views, ViewControllers) were excluded.
 ## App screenshots
 
 <p>
-<img src="./screenshots/list_portrait.png?raw=true" width="150">
-<img src="./screenshots/details_portait.png?raw=true" width="150">
+<img src="./screenshots/list_portrait.png?raw=true" width="200">
+<img src="./screenshots/details_portait.png?raw=true" width="200">
 </p>
 <p>
-<img src="./screenshots/list_found.png?raw=true" width="150">
-<img src="./screenshots/details_found.png?raw=true" width="150">
+<img src="./screenshots/list_found.png?raw=true" width="200">
+<img src="./screenshots/details_found.png?raw=true" width="200">
 </p>
 <p>
-<img src="./screenshots/list_landscape.png?raw=true" width="200">
-<img src="./screenshots/details_landscape.png?raw=true" width="200">
+<img src="./screenshots/list_landscape.png?raw=true" width="250">
+<img src="./screenshots/details_landscape.png?raw=true" width="250">
 </p>
 
 
