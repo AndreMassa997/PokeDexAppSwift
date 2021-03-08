@@ -20,8 +20,8 @@ extension UIImageView{
         
         contentMode = mode
         if let data = cacheMemoryImages.cachedResponse(for: URLRequest(url: url))?.data, let image = UIImage(data: data) {
-            DispatchQueue.main.async() { [weak self] in
-                self?.image = image
+            DispatchQueue.main.async() {
+                self.image = image
             }
         }else{
             let sessionConfiguration = URLSessionConfiguration.default
@@ -34,16 +34,16 @@ extension UIImageView{
                     let data = data, error == nil,
                     let image = UIImage(data: data)
                 else {
-                    DispatchQueue.main.async() { [weak self] in
+                    DispatchQueue.main.async() {
                         if putPlaceholder{
-                            self?.image = UIImage(named: "placeholder")
+                            self.image = UIImage(named: "placeholder")
                         }
                     }
                     return
                 }
-                DispatchQueue.main.async() { [weak self] in
+                DispatchQueue.main.async() {
                     cacheMemoryImages.storeCachedResponse(CachedURLResponse(response: httpURLResponse, data: data), for: URLRequest(url: url))
-                    self?.image = image
+                    self.image = image
                 }
             }.resume()
         }

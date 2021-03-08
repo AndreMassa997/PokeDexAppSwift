@@ -46,24 +46,22 @@ class MainCoordinator: Coordinator{
                                 let jsonDecoder = JSONDecoder()
                                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                                 let mainModel = try jsonDecoder.decode(MainModel.self, from: data)
-                                let group = DispatchGroup()
-                                var pokemons: [PokemonModel] = []
-                                
-                                mainModel.results?.forEach{ result in
-                                    guard let name = result.name else { return }
-                                    
-                                    group.enter()
+                                let pokemons = SynchronizedArray<PokemonModel>()
+                                var iterations = mainModel.results?.count ?? 0
+                                DispatchQueue.concurrentPerform(iterations: iterations, execute: { index in
+                                    guard let name = mainModel.results?[index].name else { return }
                                     self?.getPokemon(name, onSuccess: { pokemonModel in
                                         pokemons.append(pokemonModel)
-                                        group.leave()
+                                        DispatchQueue.global().async {
+                                            iterations-=1
+                                            
+                                            guard iterations <= 0 else { return }
+                                            onSuccess?(mainModel, pokemons.array)
+                                        }
                                     }, onError: {
-                                        group.leave()
+                                        
                                     })
-                                    
-                                }
-                                group.notify(queue: .main) {
-                                    onSuccess?(mainModel, pokemons)
-                                }
+                                })
                             }
                             catch{
                                 DispatchQueue.main.async {
@@ -92,5 +90,20 @@ class MainCoordinator: Coordinator{
         }, onError: {
             onError?()
         })
+    }
+}
+
+/// A thread-safe array.
+private class SynchronizedArray<Element> {
+    fileprivate let queue = DispatchQueue(label: "syncArray", attributes: .concurrent)
+    fileprivate var array = [Element]()
+    
+    /// Adds a new element at the end of the array.
+    ///
+    /// - Parameter element: The element to append to the array.
+    func append( _ element: Element) {
+        queue.async(flags: .barrier) {
+            self.array.append(element)
+        }
     }
 }

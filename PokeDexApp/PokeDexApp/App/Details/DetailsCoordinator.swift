@@ -38,4 +38,8 @@ final class DetailsCoordinator: Coordinator{
     func viewDidDisappear(){
         parentCoordinator?.removeCoordinator(self)
     }
+    
+    deinit {
+        print("DetailsCoordinator correctly deinitialized")
+    }
 }

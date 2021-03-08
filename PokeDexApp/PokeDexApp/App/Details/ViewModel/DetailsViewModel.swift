@@ -88,6 +88,10 @@ final class DetailsViewModel{
     func viewDidDisappear(){
         coordinator.viewDidDisappear()
     }
+    
+    deinit {
+        print("DetailsViewModel correctly deinitialized")
+    }
 }
 
 //return item from section or nil if no items are in section

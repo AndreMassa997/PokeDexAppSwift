@@ -31,7 +31,9 @@ final class MainViewModel{
             if let nextUrl = mainModel.next, let nextOffsetString = nextUrl.getQueryStringParameter(param: "offset"), let nextOffset = Int(nextOffsetString){
                 self?.nextOffset = nextOffset
             }
-            onSuccess?()
+            DispatchQueue.main.async {
+                onSuccess?()
+            }
         }, onError: {
             onError?()
         })

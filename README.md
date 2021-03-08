@@ -13,12 +13,14 @@ The app loads and shows the first 20 pokemons loaded from APIs or locally, if da
 If the app is not able to load other pokemons, a popup will be shown.
 
 A searchbar is present to help user to find pokemon by name or id: when user types something in this bar, the app searchs for results first locally.
-If no results are found locally, the app searchs from the APIs. 
-If no results return also from the APIs a warning popup will be shown.
+- 1. All the pokemons that contain the searched keyword in their names will be shown (e.g.: searched keyword: "Saur", results: Bulbasaur, Ivysaur, Venusaur).
+- 2. If the searched keyword is a number, the app tries to find a pokemon with the same id.
+- 3. If no results are found locally, the app searchs from the APIs. 
+- 4. If no results return also from the APIs a warning popup will be shown.
 
 When user taps on a pokemon the app shows a scrollable list of his images, name and id, types, weight and height, stats and abilities.
 
-## Offiline usage
+## Offline usage
 When the app requests some datas from APIs, after his response, it saves datas in cache memory (using URLCache), so the app is able to work even offline with this cached data.
 Also data for images are cached locally after first time retrieving.
 
