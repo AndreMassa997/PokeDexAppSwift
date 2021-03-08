@@ -40,11 +40,11 @@ I wrote some unit test to cover all possible lines of code of ViewModels, Coordi
 The UI (Views, ViewControllers) were excluded.
 
 ## Sources
-All pokemons types used in app are taken from: [here](https://pokeapi.co/api/v2/type)
-Official pokemons colors from types are taken from: [here]( https://wiki.pokemoncentral.it/Tipo)
-Weight and height max values are taken from: [here](https://pokemondb.net/pokedex/stats/height-weight)
-All stats max values are taken from: [here](https://www.serebii.net/pokedex-swsh/stat/sp-attack.shtml)
-Images are picked up in Google Images.
+- All pokemons types used in app are taken from: [here](https://pokeapi.co/api/v2/type)
+- Official pokemons colors from types are taken from: [here]( https://wiki.pokemoncentral.it/Tipo)
+- Weight and height max values are taken from: [here](https://pokemondb.net/pokedex/stats/height-weight)
+- All stats max values are taken from: [here](https://www.serebii.net/pokedex-swsh/stat/sp-attack.shtml)
+- Images are picked up in Google Images.
 
 ## App screenshots
 
