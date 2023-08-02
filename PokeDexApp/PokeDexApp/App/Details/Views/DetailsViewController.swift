@@ -36,6 +36,10 @@ final class DetailsViewController: UIViewController {
         tableView.register(TypesTableViewCell.self, forCellReuseIdentifier: TypesTableViewCell.reusableId)
         tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: StatsTableViewCell.reusableId)
         tableView.register(DimensionsTableViewCell.self, forCellReuseIdentifier: DimensionsTableViewCell.reusableId)
+        
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         return tableView
     }()
     
