@@ -94,16 +94,13 @@ class MainCoordinator: Coordinator{
 }
 
 /// A thread-safe array.
-private class SynchronizedArray<Element> {
-    fileprivate let queue = DispatchQueue(label: "syncArray", attributes: .concurrent)
+private actor SynchronizedArray<Element> {
     fileprivate var array = [Element]()
     
     /// Adds a new element at the end of the array.
     ///
     /// - Parameter element: The element to append to the array.
     func append( _ element: Element) {
-        queue.async(flags: .barrier) {
-            self.array.append(element)
-        }
+        self.array.append(element)
     }
 }
