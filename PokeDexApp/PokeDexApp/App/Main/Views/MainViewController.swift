@@ -47,12 +47,13 @@ final class MainViewController: UIViewController {
         self.setupLayout()
         
         //get the first list of pokemons
-        mainViewModel?.getPokemons(onSuccess: { [weak self] in
-            self?.collectionView.reloadData()
-        },
-        onError: { [weak self] in
-            self?.showAlert(with: "Network error", message: "Unable to load pokemons")
-        })
+        mainViewModel?.getPokemons(){ [weak self] error in
+            guard let error else {
+                self?.collectionView.reloadData()
+                return
+            }
+            self?.showAlert(message: error.localizedDescription)
+        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(changeOrientation), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
@@ -72,7 +73,7 @@ final class MainViewController: UIViewController {
         ])
     }
     
-    private func showAlert(with title: String, message: String){
+    private func showAlert(with title: String = "Errore", message: String){
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
         }))
@@ -98,11 +99,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             if let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderCollectionReusableView.reusableId, for: indexPath) as? HeaderCollectionReusableView{
                 header.configSearchBar(
                     onBeginSearch: { [weak self] searchedText in
-                        self?.mainViewModel?.searchPokemon(text: searchedText, onSuccess: {
-                            self?.collectionView.reloadData()
-                        }, onError: { [weak self] in
-                            self?.showAlert(with: "Sorry!", message: "Pokemons not found on server or locally")
-                        })
+                        self?.mainViewModel?.searchPokemon(text: searchedText){ [weak self] error in
+                            guard let error else {
+                                self?.collectionView.reloadData()
+                                return
+                            }
+                            self?.showAlert(with: "Sorry!", message: error.localizedDescription)
+                        }
                 }, onFinishSearch: { [weak self] in
                     self?.mainViewModel?.didFinishSearching()
                     self?.collectionView.reloadData()
@@ -120,17 +123,19 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                     let initalPokemonsNumber = mainViewModel.pokemonCells.count
                     let lastIndexPathItem = collectionView.numberOfItems(inSection: 0)-1
                     if initalPokemonsNumber > 0, lastIndexPathItem == initalPokemonsNumber - 1{
-                        mainViewModel.getPokemons(onSuccess: {
-                            var indexPaths: [IndexPath] = []
-                            let newPokemonsNumber = mainViewModel.pokemonCells.count - initalPokemonsNumber
-                            for i in 0..<newPokemonsNumber{
-                                indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
+                        mainViewModel.getPokemons(){ [weak self] error in
+                            guard let error else {
+                                var indexPaths: [IndexPath] = []
+                                let newPokemonsNumber = mainViewModel.pokemonCells.count - initalPokemonsNumber
+                                for i in 0..<newPokemonsNumber{
+                                    indexPaths.append(IndexPath(item: initalPokemonsNumber + i, section: 0))
+                                }
+                                collectionView.insertItems(at: indexPaths)
+                                return
                             }
-                            collectionView.insertItems(at: indexPaths)
-                        }, onError:{ [weak self] in
-                            self?.showAlert(with: "Sorry!", message: "Unable to load pokemons")
+                            self?.showAlert(with: "Sorry!", message: error.localizedDescription)
                             footer.stopAnimate()
-                        })
+                        }
                     }
                 }
                 return footer

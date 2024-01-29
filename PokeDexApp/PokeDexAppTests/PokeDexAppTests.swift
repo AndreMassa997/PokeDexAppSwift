@@ -10,14 +10,6 @@ import XCTest
 
 class PokeDexAppTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     //MARK: MAIN VIEW MODEL TESTS
     func test_getPokemons_shouldReturnData(){
         //Given
@@ -26,11 +18,13 @@ class PokeDexAppTests: XCTestCase {
        
         
         //When
-        sut.getPokemons(onSuccess: {
-            expetaction.fulfill()
-        }, onError: {
+        sut.getPokemons(){ error in
+            guard error != nil else{
+                expetaction.fulfill()
+                return
+            }
             XCTFail()
-        })
+        }
         
         wait(for: [expetaction], timeout: 5.0)
         
@@ -47,11 +41,13 @@ class PokeDexAppTests: XCTestCase {
         let expetaction = XCTestExpectation(description: "Expected to get pokemons")
         
         //When
-        sut.getPokemons(onSuccess: {
-            expetaction.fulfill()
-        }, onError: {
+        sut.getPokemons(){ error in
+            guard error != nil else{
+                expetaction.fulfill()
+                return
+            }
             XCTFail()
-        })
+        }
         
         wait(for: [expetaction], timeout: 5.0)
 
@@ -68,11 +64,13 @@ class PokeDexAppTests: XCTestCase {
         let expetaction = XCTestExpectation(description: "Expected to get pokemons")
 
         //When
-        sut.searchPokemon(text: "charizard", onSuccess: {
-            expetaction.fulfill()
-        }, onError: {
+        sut.searchPokemon(text: "charizard"){ error in
+            guard error != nil else{
+                expetaction.fulfill()
+                return
+            }
             XCTFail()
-        })
+        }
         
         wait(for: [expetaction], timeout: 5.0)
         
@@ -88,17 +86,20 @@ class PokeDexAppTests: XCTestCase {
         let expetaction = XCTestExpectation(description: "Expected to get pokemons")
         
         //When
-        sut.getPokemons(onSuccess: {
-            
-        }, onError: {
+        sut.getPokemons(){ error in
+            guard error != nil else{
+                return
+            }
             XCTFail()
-        })
+        }
         
-        sut.searchPokemon(text: "charizard", onSuccess: {
-            expetaction.fulfill()
-        }, onError: {
+        sut.searchPokemon(text: "charizard"){ error in
+            guard error != nil else{
+                expetaction.fulfill()
+                return
+            }
             XCTFail()
-        })
+        }
         
         wait(for: [expetaction], timeout: 5.0)
         
@@ -112,17 +113,20 @@ class PokeDexAppTests: XCTestCase {
         let expetaction = XCTestExpectation(description: "Expected to get pokemons")
         
         //When
-        sut.getPokemons(onSuccess: {
-            
-        }, onError: {
+        sut.getPokemons(){ error in
+            guard error != nil else{
+                return
+            }
             XCTFail()
-        })
+        }
         
-        sut.searchPokemon(text: "6", onSuccess: {
-            expetaction.fulfill()
-        }, onError: {
+        sut.searchPokemon(text: "6"){ error in
+            guard error != nil else{
+                expetaction.fulfill()
+                return
+            }
             XCTFail()
-        })
+        }
         
         wait(for: [expetaction], timeout: 5.0)
         
@@ -136,11 +140,13 @@ class PokeDexAppTests: XCTestCase {
         let expetaction = XCTestExpectation(description: "Expected to find pokemon by his name from server")
         
         //When
-        sut.searchPokemon(text: "charizard", onSuccess: {
-            expetaction.fulfill()
-        }, onError: {
+        sut.searchPokemon(text: "charizard"){ error in
+            guard error != nil else{
+                expetaction.fulfill()
+                return
+            }
             XCTFail()
-        })
+        }
         
         wait(for: [expetaction], timeout: 5.0)
         
@@ -154,11 +160,13 @@ class PokeDexAppTests: XCTestCase {
         let expetaction = XCTestExpectation(description: "Expected to find pokemon by id from server")
         
         //When
-        sut.searchPokemon(text: "6", onSuccess: {
-            expetaction.fulfill()
-        }, onError: {
+        sut.searchPokemon(text: "6"){ error in
+            guard error != nil else{
+                expetaction.fulfill()
+                return
+            }
             XCTFail()
-        })
+        }
         
         wait(for: [expetaction], timeout: 5.0)
         
@@ -173,11 +181,13 @@ class PokeDexAppTests: XCTestCase {
         let text = "test"
         
         //When
-        sut.searchPokemon(text: text, onSuccess: {
+        sut.searchPokemon(text: text){ error in
+            guard error != nil else{
+                expetaction.fulfill()
+                return
+            }
             expetaction.fulfill()
-        }, onError: {
-            expetaction.fulfill()
-        })
+        }
         
         wait(for: [expetaction], timeout: 5.0)
         
@@ -194,11 +204,14 @@ class PokeDexAppTests: XCTestCase {
         let expetaction = XCTestExpectation(description: "Get pokemons")
         
         //When
-        sut.getPokemons(onSuccess: {
-            expetaction.fulfill()
-        }, onError: {
+        sut.getPokemons(onResult: { error in
+            guard error != nil else{
+                expetaction.fulfill()
+                return
+            }
             XCTFail()
         })
+        
         wait(for: [expetaction], timeout: 5.0)
         
         sut.didFinishSearching()
@@ -435,16 +448,14 @@ class PokeDexAppTests: XCTestCase {
     
 
     private class TestableMainCoordinator: MainCoordinator{
-        override func getPokemons(offset: Int, onSuccess: ((MainModel, [PokemonModel]) -> Void)?, onError: (() -> Void)?) {
-            onSuccess?(
-                MainModel(count: 1118, next: URL(string: "https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20"), previous: nil, results: []),
-                [PokeDexAppTests.pokemonModel]
-            )
+        
+        override func getPokemons(offset: Int, onResult: @escaping (MainModel?, [PokemonModel]?, ErrorData?) -> Void){
+            onResult(MainModel(count: 1118, next: URL(string: "https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20"), previous: nil, results: []),
+                [PokeDexAppTests.pokemonModel], nil)
         }
-        override func getPokemon(_ nameOrId: String, onSuccess: ((PokemonModel) -> Void)?, onError: (() -> Void)?) {
-            onSuccess?(
-                PokeDexAppTests.pokemonModel
-            )
+        
+        override func getPokemon(_ nameOrId: String, onResult: @escaping (PokemonModel?, ErrorData?) -> Void){
+                onResult(PokeDexAppTests.pokemonModel, nil)
         }
     }
 

@@ -36,60 +36,75 @@ class MainCoordinator: Coordinator{
     }
     
     //get list of pokemons from server (paging)
-    func getPokemons(offset: Int, onSuccess:((_ mainModel: MainModel, _ pokemons: [PokemonModel]) -> Void)?, onError:(() -> Void)?){
+    func getPokemons(offset: Int, onResult: @escaping (MainModel?, [PokemonModel]?, ErrorData?) -> Void){
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "offset", value: String(offset))
         ]
-        PokeAPI.shared.get(path: "pokemon", queryParams: queryItems,
-                           onSuccess: { [weak self] data in
-                            do {
-                                let jsonDecoder = JSONDecoder()
-                                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                                let mainModel = try jsonDecoder.decode(MainModel.self, from: data)
-                                let pokemons = SynchronizedArray<PokemonModel>()
-                                var iterations = mainModel.results?.count ?? 0
-                                DispatchQueue.concurrentPerform(iterations: iterations, execute: { index in
-                                    guard let name = mainModel.results?[index].name else { return }
-                                    self?.getPokemon(name, onSuccess: { pokemonModel in
-                                        pokemons.append(pokemonModel)
-                                        DispatchQueue.global().async {
-                                            iterations-=1
-                                            
-                                            guard iterations <= 0 else { return }
-                                            onSuccess?(mainModel, pokemons.array)
-                                        }
-                                    }, onError: {
-                                        
-                                    })
-                                })
+        PokeAPI.shared.get(path: "pokemon", queryParams: queryItems) { [weak self] data, error in
+            guard let data else {
+                if let error{
+                    onResult(nil, nil, error)
+                }else{
+                    onResult(nil, nil, .invalidData)
+                }
+                return
+            }
+            do {
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                let mainModel = try jsonDecoder.decode(MainModel.self, from: data)
+                let pokemons = SynchronizedArray<PokemonModel>()
+                mainModel.results?.forEach{ model in
+                    guard let name = model.name else { return }
+                    self?.getPokemon(name){ pokemon, error in
+                        guard let pokemon else {
+                            if let error{
+                                onResult(nil, nil, error)
+                            }else{
+                                onResult(nil, nil, .invalidData)
                             }
-                            catch{
-                                DispatchQueue.main.async {
-                                    onError?()
+                            return
+                        }
+                        Task{
+                            await pokemons.append(pokemon)
+                            let allPokemons = await pokemons.array
+                            DispatchQueue.main.async {
+                                if allPokemons.count == mainModel.results?.count{
+                                    onResult(mainModel, allPokemons, nil)
                                 }
                             }
-                           }, onError: {
-                            DispatchQueue.main.async {
-                                onError?()
-                            }
-                           })
+                        }
+                    }
+                }
+            }catch{
+                DispatchQueue.main.async {
+                    onResult(nil, nil, .invalidData)
+                }
+            }
+        }
     }
         
     //get pokemon with name or id
-    func getPokemon(_ nameOrId: String, onSuccess: ((_ pokemon: PokemonModel) -> Void)?, onError: (()-> Void)?){
-        PokeAPI.shared.get(path: "pokemon/\(nameOrId)", onSuccess: { data in
+    func getPokemon(_ nameOrId: String, onResult: @escaping (PokemonModel?, ErrorData?) -> Void){
+        PokeAPI.shared.get(path: "pokemon/\(nameOrId)"){ data, error in
+            guard let data else {
+                if let error{
+                    onResult(nil, error)
+                }else{
+                    onResult(nil, .invalidData)
+                }
+                return
+            }
             do {
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 let pokemonModel = try jsonDecoder.decode(PokemonModel.self, from: data)
-                onSuccess?(pokemonModel)
+                onResult(pokemonModel, nil)
             }
             catch{
-                onError?()
+                onResult(nil, .invalidData)
             }
-        }, onError: {
-            onError?()
-        })
+        }
     }
 }
 

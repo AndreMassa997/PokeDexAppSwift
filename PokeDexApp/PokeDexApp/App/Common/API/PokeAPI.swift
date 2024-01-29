@@ -7,14 +7,15 @@
 
 import Foundation
 
+typealias APIResult = (Data?, ErrorData?) -> Void
+
 final class PokeAPI{
     static let shared: PokeAPI = PokeAPI()
     
     //200 MB cache memory + 200 MB for images
     private let cacheMemory = URLCache(memoryCapacity: 0, diskCapacity: 200*1024*1024, diskPath: "PokeDexAPICache")
     
-    func get(path: String, queryParams: [URLQueryItem]? = nil, saveResponseOnCache: Bool = true, onSuccess: ((Data) -> Void)?, onError: (() -> Void)?){
-        
+    func get(path: String, queryParams: [URLQueryItem]? = nil, saveResponseOnCache: Bool = true, onResult: @escaping APIResult){
         //build the URL
         var components = URLComponents()
         components.scheme = "https"
@@ -40,27 +41,27 @@ final class PokeAPI{
         
         if let cachedData = cacheMemory.cachedResponse(for: request)?.data{
             //if data are cached, means that are good
-            onSuccess?(cachedData)
+            onResult(cachedData, nil)
         }else{
             URLSession(configuration: sessionConfiguration).dataTask(with: request, completionHandler: { [weak self] data, response, error -> Void in
                 if let error = error {
                     print("Network error: " + error.localizedDescription)
-                    onError?()
+                    onResult(nil, .networkError)
                     return
                 }
                 guard let response = response as? HTTPURLResponse else {
                     print("Response invalid")
-                    onError?()
+                    onResult(nil, .invalidResponse)
                     return
                 }
                 guard response.statusCode == 200 else {
                     print("Status code not valid: \(response.statusCode)")
-                    onError?()
+                    onResult(nil, .invalidStatusCode)
                     return
                 }
                 guard let data = data else {
                     print("No data")
-                    onError?()
+                    onResult(nil, .invalidData)
                     return
                 }
                 
@@ -68,8 +69,15 @@ final class PokeAPI{
                 if saveResponseOnCache{
                     self?.cacheMemory.storeCachedResponse(CachedURLResponse(response: response, data: data), for: request)
                 }
-                onSuccess?(data)
+                onResult(data, nil)
             }).resume()
         }
     }
+}
+
+enum ErrorData: Error{
+    case networkError
+    case invalidData
+    case invalidResponse
+    case invalidStatusCode
 }

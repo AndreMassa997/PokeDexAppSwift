@@ -20,8 +20,16 @@ final class MainViewModel{
     }
     
     //MARK: PUBLIC METHODS
-    func getPokemons(onSuccess: (() -> Void)?, onError: (()-> Void)?){
-        self.coordinator.getPokemons(offset: nextOffset, onSuccess: { [weak self] mainModel, pokemons in
+    func getPokemons(onResult: @escaping (ErrorData?) -> Void){
+        self.coordinator.getPokemons(offset: nextOffset){ [weak self] mainModel, pokemons, error in
+            guard let mainModel, let pokemons else {
+                if let error{
+                    onResult(error)
+                }else{
+                    onResult(.invalidData)
+                }
+                return
+            }
             self?.pokemons.append(contentsOf: pokemons)
             self?.pokemonCells.append(contentsOf: pokemons.map({
                 PokemonCellViewModel(pokemonModel: $0)
@@ -32,11 +40,9 @@ final class MainViewModel{
                 self?.nextOffset = nextOffset
             }
             DispatchQueue.main.async {
-                onSuccess?()
+                onResult(nil)
             }
-        }, onError: {
-            onError?()
-        })
+        }
     }
 
     //pokemon from list tapped
@@ -49,30 +55,34 @@ final class MainViewModel{
     }
     
     //search pokemon by text, first locally, if no results were founded, call poke api
-    func searchPokemon(text: String, onSuccess: (()->Void)?, onError: (()->Void)?){
+    func searchPokemon(text: String, onResult: @escaping (ErrorData?) -> Void){
         self.isSearching = true
         let filteredPokemons = self.searchPokemonsLocally(text: text)
         if filteredPokemons.count > 0 {
             self.pokemonCells = filteredPokemons
-            onSuccess?()
+            onResult(nil)
         }else{
             var text = text.lowercased()
             if let id = Int(text){  //the text is a number, transform it in int
                 text = "\(id)"
             }
             //get the pokemon from server by name or id
-            self.coordinator.getPokemon(text, onSuccess: { [weak self] pokemonModel in
+            self.coordinator.getPokemon(text){ [weak self] pokemonModel, error in
+                guard let pokemonModel else {
+                    if let error{
+                        onResult(error)
+                    }else{
+                        onResult(.invalidData)
+                    }
+                    return
+                }
                 let pokemonCell = PokemonCellViewModel(pokemonModel: pokemonModel)
                 self?.pokemonCells = [pokemonCell]
                 self?.pokemonFounded = pokemonModel
                 DispatchQueue.main.async {
-                    onSuccess?()
+                    onResult(nil)
                 }
-            }, onError: {
-                DispatchQueue.main.async {
-                    onError?()
-                }
-            })
+            }
         }
     }
     
